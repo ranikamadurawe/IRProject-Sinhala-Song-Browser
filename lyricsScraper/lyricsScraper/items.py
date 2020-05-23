@@ -18,3 +18,4 @@ class LyricsscraperItem(Item):
     tags = Field()
     title = Field()
     movie = Field()
+    url = Field()

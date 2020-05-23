@@ -11,7 +11,7 @@ class LyricsSpider(Spider):
     name = "sinhalasongbook"
     allowed_domains = ["sinhalasongbook.com"]
     start_urls = [
-        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i)  for i in range(1,4)
+        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i)  for i in range(1,3)
     ]
 
     def parse(self,response):
@@ -41,6 +41,8 @@ class LyricsSpider(Spider):
             item["title"] = titles
         else:
             item["title"] = titlestring.strip()
+
+        item['url'] = response.url
 
         songInfo = responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/*[@class="su-row"]//ul/li')
         for i in range(0,len(songInfo)):
