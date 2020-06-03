@@ -19,3 +19,6 @@ class LyricsscraperItem(Item):
     title = Field()
     movie = Field()
     url = Field()
+    views = Field()
+    key = Field()
+    beat = Field()
