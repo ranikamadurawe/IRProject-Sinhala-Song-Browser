@@ -30,7 +30,7 @@ class LyricsSpider(Spider):
     name = "sinhalasongbook"
     allowed_domains = ["sinhalasongbook.com"]
     start_urls = [
-        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i) for i in range(1,3)
+        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i) for i in range(1,6)
     ]
 
     def parse(self,response):
@@ -59,14 +59,19 @@ class LyricsSpider(Spider):
         item["songLyricsSearchable"] = songLyrics
 
         string_viewcount_data = remove_tags(responseSelector.xpath('//*[@class="tptn_counter"]')[0].extract())
-        string_viewcount = re.sub('[^0-9,]',"",string_viewcount_data).repace(',','')
+        string_viewcount = re.sub('[^0-9,]',"",string_viewcount_data).replace(',','')
         viewcount = int(string_viewcount.replace(",",""))
         item["views"] = viewcount
 
-        string_sharecount_data = remove_tags(responseSelector.xpath('//*[@class="swp_count"]')[0].extract())
-        string_sharecount = re.sub('[^0-9,]',"",string_sharecount_data).repace(',','')
-        sharecount = int(string_sharecount)
-        item["shares"] = sharecount
+        shareobj = responseSelector.xpath('//*[@class="swp_count"]')
+        if (len(shareobj) == 0):
+            shareobj = responseSelector.xpath('//*[@class="swp_count "]')
+
+        if (len(shareobj) > 0):
+            string_sharecount_data = remove_tags(shareobj[0].extract())
+            string_sharecount = re.sub('[^0-9,]', "", string_sharecount_data).replace(',', '')
+            sharecount = int(string_sharecount)
+            item["shares"] = sharecount
 
         titlestring = remove_tags(responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/h2')[0].extract())
         if("-" in titlestring):
