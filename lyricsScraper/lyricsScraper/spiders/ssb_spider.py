@@ -4,6 +4,7 @@ from lyricsScraper.items import LyricsscraperItem
 from w3lib.html import remove_tags
 from mtranslate import translate
 import string
+import re
 
 
 ## Global Variable Decleration ##
@@ -29,7 +30,7 @@ class LyricsSpider(Spider):
     name = "sinhalasongbook"
     allowed_domains = ["sinhalasongbook.com"]
     start_urls = [
-        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i)  for i in range(1,2)
+        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i) for i in range(1,3)
     ]
 
     def parse(self,response):
@@ -45,14 +46,27 @@ class LyricsSpider(Spider):
 
 
         ## Non Translated data
-        songLyricswithExtra = remove_tags(responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]//pre')[0].extract())
-        songLyrics = "".join([char for char in songLyricswithExtra if ( ( char not in string.digits ) and (char not in string.ascii_letters) and (char not in removepunc )) ]).strip()
+        songLyricswithExtra = remove_tags(responseSelector
+                                          .xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]//pre')[0].extract())
+        songLyrics = "".join([char for char in songLyricswithExtra
+                              if ( ( char not in string.digits ) and (char not in string.ascii_letters) and (char not in removepunc )) ]).strip()
+        songLyrics = songLyrics.replace("∆","")
         item["songLyrics"] = songLyrics
 
+        songLyrics = songLyrics.replace("\n", "")
+        songLyrics = songLyrics.replace("\t", "")
+        songLyrics = "".join([char for char in songLyrics if (  (char not in string.punctuation )) ]).strip()
+        item["songLyricsSearchable"] = songLyrics
+
         string_viewcount_data = remove_tags(responseSelector.xpath('//*[@class="tptn_counter"]')[0].extract())
-        string_viewcount = string_viewcount_data.split(" ")[2].split("Visits")[0]
+        string_viewcount = re.sub('[^0-9,]',"",string_viewcount_data).repace(',','')
         viewcount = int(string_viewcount.replace(",",""))
         item["views"] = viewcount
+
+        string_sharecount_data = remove_tags(responseSelector.xpath('//*[@class="swp_count"]')[0].extract())
+        string_sharecount = re.sub('[^0-9,]',"",string_sharecount_data).repace(',','')
+        sharecount = int(string_sharecount)
+        item["shares"] = sharecount
 
         titlestring = remove_tags(responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/h2')[0].extract())
         if("-" in titlestring):
@@ -89,10 +103,16 @@ class LyricsSpider(Spider):
         artistInfoObject = responseSelector.xpath('//*[@id="genesis-content"]/article//*[@class="artist-name"]')
         if (len(artistInfoObject) > 0) :
             aristInfoString = remove_tags(artistInfoObject[0].extract())
-            sinhalaArtistNames = aristInfoString.split("/")[0]
-            sinhalaArtistNamesArray = sinhalaArtistNames.split("|")
+            aristInfoString = aristInfoString.replace("|","/")
+            artistNames = aristInfoString.split("/")
+            isascii = lambda s: len(s) == len(s.encode())
+            sinhalaArtistNamesArray = []
+            for i in artistNames :
+                if not isascii(i):
+                    sinhalaArtistNamesArray.append(i)
             item['artist'] = sinhalaArtistNamesArray
-            gotNamesfromElement = True
+            if ( len(sinhalaArtistNamesArray) > 0 ):
+                gotNamesfromElement = True
         ## Translated Data
 
         songInfo = responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/*[@class="su-row"]//ul/li')
