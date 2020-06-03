@@ -21,15 +21,7 @@ NEWSPIDER_MODULE = 'lyricsScraper.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-ITEM_PIPELINES = {
-    'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
-}
 
-ELASTICSEARCH_SERVERS = ['localhost']
-ELASTICSEARCH_INDEX = 'ir-ssb-data'
-ELASTICSEARCH_INDEX_DATE_FORMAT = '%Y-%m'
-ELASTICSEARCH_TYPE = 'items'
-ELASTICSEARCH_UNIQ_KEY = 'url'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32

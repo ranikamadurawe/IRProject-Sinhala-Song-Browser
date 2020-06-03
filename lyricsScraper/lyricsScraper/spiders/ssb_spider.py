@@ -2,45 +2,34 @@ from scrapy import Spider, Request
 from scrapy.selector import Selector
 from lyricsScraper.items import LyricsscraperItem
 from w3lib.html import remove_tags
-from googletrans import Translator
-from google.cloud import translate_v2 as translate
+from mtranslate import translate
 import string
-import os
 
 
 ## Global Variable Decleration ##
 removepunc = string.punctuation.replace(".","").replace(",", "").replace("/", "")
 translation_dict = {}
-translator = Translator()
-path = 'home/madnisal/Documents/service.json'
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = path
-translate_client = translate.Client()
 
-def translate(word):
-    translated = translator.translate(word, dest='si', src='en')
-    return translated.text
+def translate_word(word):
+    translated = translate(word, 'si', 'en')
+    return translated
 
 def translate_array(wordlist):
     translated_array = []
     for i in wordlist :
         if i in translation_dict.keys() :
-            translated_array.extend(translation_dict.get(i))
+            translated_array.append(translation_dict.get(i))
         else :
-            translated_phrase = translate(i)
-            for char in translated_phrase :
-                if char in string.ascii_letters :
-                    result = translate_client.translate(i, target_language='si', source_language='en')
-                    translated_phrase = result['translatedText']
-                    break
+            translated_phrase = translate_word(i)
             translation_dict[i] = translated_phrase
-            translated_array.extend(translated_phrase)
+            translated_array.append(translated_phrase)
     return translated_array
 
 class LyricsSpider(Spider):
     name = "sinhalasongbook"
     allowed_domains = ["sinhalasongbook.com"]
     start_urls = [
-        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i)  for i in range(1,3)
+        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i)  for i in range(1,2)
     ]
 
     def parse(self,response):
@@ -60,8 +49,9 @@ class LyricsSpider(Spider):
         songLyrics = "".join([char for char in songLyricswithExtra if ( ( char not in string.digits ) and (char not in string.ascii_letters) and (char not in removepunc )) ]).strip()
         item["songLyrics"] = songLyrics
 
-        string_viewcount = remove_tags(responseSelector.xpath('//*[@class="tptn_counter"]').extract())
-        viewcount = int(filter(str.isdigit, string_viewcount))
+        string_viewcount_data = remove_tags(responseSelector.xpath('//*[@class="tptn_counter"]')[0].extract())
+        string_viewcount = string_viewcount_data.split(" ")[2].split("Visits")[0]
+        viewcount = int(string_viewcount.replace(",",""))
         item["views"] = viewcount
 
         titlestring = remove_tags(responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/h2')[0].extract())
@@ -73,29 +63,42 @@ class LyricsSpider(Spider):
             titles = titlestring.split("|")
             titles = [i.strip() for i in titles]
             item["title"] = titles[1]
+        elif("–" in titlestring):
+            titles = titlestring.split("–")
+            titles = [i.strip() for i in titles]
+            item["title"] = titles[1]
         else:
             item["title"] = titlestring.strip()
 
-        musicInfoString = remove_tags(responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/h2')[0].extract())
+        musicInfoString = remove_tags(responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/h3')[0].extract())
         if ("-" in musicInfoString):
-            musicInfo = titlestring.split("-")
-            musicInfo = [i.strip() for i in titles]
-            item["key"] = musicInfo[0]
-            item["beat"] = musicInfo[1]
+            musicInfo = musicInfoString.split("-")
+            musicInfo = [i.strip() for i in musicInfo]
+            item["key"] = musicInfo[0].replace("Key:", "").strip()
+            item["beat"] = musicInfo[1].replace("Beat:", "").strip()
         elif ("|" in musicInfoString):
-            musicInfo = titlestring.split("|")
-            musicInfo = [i.strip() for i in titles]
-            item["key"] = musicInfo[0]
-            item["beat"] = musicInfo[1]
+            musicInfo = musicInfoString.split("|")
+            musicInfo = [i.strip() for i in musicInfo]
+            item["key"] = musicInfo[0].replace("Key:", "").strip()
+            item["beat"] = musicInfo[1].replace("Beat:", "").strip()
 
         item['url'] = response.url
 
+        gotNamesfromElement = False
+
+        artistInfoObject = responseSelector.xpath('//*[@id="genesis-content"]/article//*[@class="artist-name"]')
+        if (len(artistInfoObject) > 0) :
+            aristInfoString = remove_tags(artistInfoObject[0].extract())
+            sinhalaArtistNames = aristInfoString.split("/")[0]
+            sinhalaArtistNamesArray = sinhalaArtistNames.split("|")
+            item['artist'] = sinhalaArtistNamesArray
+            gotNamesfromElement = True
         ## Translated Data
 
         songInfo = responseSelector.xpath('//*[@id="genesis-content"]/article/*[@class="entry-content"]/*[@class="su-row"]//ul/li')
         for i in range(0,len(songInfo)):
             headstring = remove_tags(songInfo[i].extract())
-            if( "Artist:" in headstring ) :
+            if( "Artist:" in headstring and not gotNamesfromElement) :
                 artiststring = headstring.replace("Artist:", "").strip()
                 artists = artiststring.split(",")
                 artists = [i.strip() for i in artists]
@@ -120,5 +123,5 @@ class LyricsSpider(Spider):
                 translated_composers = translate_array(composers)
                 item['composer'] = translated_composers
             elif (("Movie:" in headstring)):
-                item['movie'] = headstring.replace("Movie:", "").strip()
+                item['movie'] = translate_word(headstring.replace("Movie:", "").strip())
         return item
