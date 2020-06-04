@@ -30,7 +30,7 @@ class LyricsSpider(Spider):
     name = "sinhalasongbook"
     allowed_domains = ["sinhalasongbook.com"]
     start_urls = [
-        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i) for i in range(11,13)
+        "https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i) for i in range(21,23)
     ]
 
     def parse(self,response):
