@@ -1,2 +1,7 @@
 /lyricsScraper/.idea
 /resourceFiles
+searchEngine/.idea/
+searchEngine/__pycache__/
+pythonHelpers/.idea/
+/lyricsScraper/lyricsScraper/.idea
+/lyricsScraper/lyricsScraper/__pycache__
