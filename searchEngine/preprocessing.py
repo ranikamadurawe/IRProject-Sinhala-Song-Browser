@@ -1,12 +1,86 @@
 import io
 from itertools import chain, combinations
+from elasticsearch import Elasticsearch
+from sinling import SinhalaTokenizer
+
+es = Elasticsearch()
+tokenizer = SinhalaTokenizer()
+
+def generateNormalQuery(searchQuery):
+    tokens = tokenizer.tokenize(searchQuery)
+    stemmed_tokens = stemming(tokens)
+    act = autocorrect(stemmed_tokens)
+    classDict = searchClassification(act)
+    if(len(classDict)<0):
+        print("[INFO] Generating ranked Query")
+        res = es.search(
+            index="160376l-ssb-data-2020_backup",
+            body=
+            {
+                "query":
+                    {"match_all":
+                         {}
+                     }
+            }
+        )
+        print(res['hits']['hits'])
+    else:
+        rankedlist = []
+        for i in classDict:
+            if(i in ["writer","composer","singer"]):
+                rankedlist.append(i+"^3")
+        print("[INFO] Generating ranked Query")
+        res = es.search(
+            index="160376l-ssb-data-2020_backup",
+            body=
+            {
+                "query":
+                    {
+                        "multi_match": {
+                            "query": searchQuery,
+                            "fields": rankedlist
+                        }
+                    }
+            }
+        )
+        print(res['hits']['hits'])
+
 
 def getSubsets(iterable):
     return chain.from_iterable(combinations(iterable, r) for r in range(len(iterable)+1))
 
 #Observe tokens and return query type as 'Normal Lyric Search', 'Feature Search', 'Ranked Feature Search'
 def searchClassification(tokens):
-    return True
+
+    synonyms = "synonyms.txt"
+    try:
+        synonymsFile = io.open(synonyms, "r", encoding='utf-8').read()
+    except UnicodeDecodeError:
+        synonymsFile = io.open(synonyms, "r", encoding='latin-1').read()
+    synonymsList = synonymsFile.split("\n")
+    synonymsDict = {}
+    for i in synonymsList:
+        splitSynonymLine = i.split(":")
+        try :
+            synonymsDict[splitSynonymLine[0]] = splitSynonymLine[1].split(",")
+        except:
+            print()
+    rankedQuery = {}
+    for corrected_tokens in tokens :
+        for token in corrected_tokens:
+            foundsynonym = False
+            for key in synonymsDict:
+                if token in synonymsDict[key]:
+                    if rankedQuery.get(key) == None:
+                        rankedQuery[key] = 1
+                    else :
+                        rankedQuery[key] = rankedQuery[key]+1
+                    foundsynonym = True
+                    break
+            if foundsynonym:
+                break
+    return rankedQuery
+
 
 #Looks at basic error rules within the Sinhala Lanugage and appends likely errors
 def autocorrect(tokens):
@@ -33,7 +107,7 @@ def autocorrect(tokens):
                 elif d[1] in token:
                     token = token.replace(d[1],d[0])
             allWords[token_number].append(token)
-    print(allWords)
+    return allWords
 
 #Reduce strings to simple formats based on rules
 def stemming(doc):
@@ -58,5 +132,4 @@ def stemming(doc):
 
     return stemmedWordlist
 
-
-autocorrect(['සුනිල්','ශාන්ත'])
+generateNormalQuery("අමරදේව")

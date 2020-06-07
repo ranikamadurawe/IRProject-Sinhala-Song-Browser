@@ -2,9 +2,9 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, QLabel
 import preprocessing
 from PyQt5.QtCore import pyqtSlot
-from sinling import SinhalaTokenizer
 
-tokenizer = SinhalaTokenizer()
+
+
 
 class App(QMainWindow):
 
@@ -80,9 +80,8 @@ class App(QMainWindow):
     @pyqtSlot()
     def search_query(self):
         searchQuery = self.search_box.text()
-        tokens = tokenizer.tokenize(searchQuery)
-        stemmed_tokens = preprocessing.stemming(tokens)
-        QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + ",".join(stemmed_tokens), QMessageBox.Ok, QMessageBox.Ok)
+        preprocessing.generateNormalQuery(searchQuery)
+        QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + ",".join(searchQuery), QMessageBox.Ok, QMessageBox.Ok)
         self.search_box.setText("")
 
 if __name__ == '__main__':
