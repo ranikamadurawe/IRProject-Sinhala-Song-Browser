@@ -9,7 +9,7 @@ class QueryProcessor:
     def __init__(self):
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
-        self.index = "160376l-ssb-data-2020_backup"
+        self.index = "160376l-ssb-data-2020-modified-index"
 
     def generateMLTQuery(self, searchQuery, classDict, rankedlist):
         print("[INFO] Generating ranked Query")
@@ -193,4 +193,4 @@ class QueryProcessor:
         return stemmedWordlist
 
 queryProcessor = QueryProcessor()
-queryProcessor.generateQuery("ලියන්නා")
+queryProcessor.generateQuery("ගැයු ගුණදා")
