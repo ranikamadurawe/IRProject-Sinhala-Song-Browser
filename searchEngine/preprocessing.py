@@ -65,16 +65,23 @@ class QueryProcessor:
     def generateTermsMultipleQuery(self,flat_list_act,fields, classDict):
         multTermValue = []
         sorted = False
+        addedFields = []
         for i in fields:
             if(i != "popularity"):
                 multTermValue.append({"terms": {i:flat_list_act, "boost":classDict[i]+1}})
+                addedFields.append(i)
             else :
                 sorted = True
                 if(len(fields)==1):
-                    for i in ["artist", "writer", "genre", "composer"]:
+                    for i in ["artist","writer","genre","composer"]:
                         multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
-        multTermValue.append({"terms": {"songLyricsSearchable":flat_list_act}})
-        multTermValue.append({"terms": {"title": flat_list_act}})
+        for i in ["artist", "writer", "genre", "composer","movie"]:
+            if i not in addedFields:
+                multTermValue.append({"terms": {i: flat_list_act, "boost": 1 }})
+        if(not sorted):
+            for i in ["title","songLyricsSearchable"]:
+                if i not in addedFields:
+                    multTermValue.append({"terms": {i:flat_list_act}})
         if (not sorted):
             res = self.es.search(
                 index=self.index,
