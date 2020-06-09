@@ -11,7 +11,7 @@ class QueryProcessor:
         self.es = Elasticsearch()
         self.index = "160376l-ssb-data-2020-modified-index"
 
-    def generateMLTQuery(self, searchQuery, classDict, rankedlist):
+    def generateMLTQuery(self, searchQuery, rankedlist):
         print("[INFO] Generating ranked Query")
         res = self.es.search(
             index=self.index,
@@ -32,23 +32,49 @@ class QueryProcessor:
         for i in results:
             print(i)
 
-    def generateTermsMultipleQuery(self,flat_list_act,fields):
+    def generateTermsMultipleQuery(self,flat_list_act,fields, classDict):
         multTermValue = []
+        sorted = False
         for i in fields:
-            multTermValue.append({"terms": {i:flat_list_act}})
+            if(i != "popularity"):
+                multTermValue.append({"terms": {i:flat_list_act, "boost":classDict[i]+1}})
+            else :
+                sorted = True
+                if(len(fields)==1):
+                    for i in ["artist", "writer", "genre", "composer"]:
+                        multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
+        multTermValue.append({"terms": {"songLyricsSearchable":flat_list_act}})
+        multTermValue.append({"terms": {"title": flat_list_act}})
         print(multTermValue)
-        res = self.es.search(
-            index=self.index,
-            body=
-            {
-                "query":
-                    {
-                        "bool": {
-                            "should": multTermValue
+        if (not sorted):
+            res = self.es.search(
+                index=self.index,
+                body=
+                {
+                    "query":
+                        {
+                            "bool": {
+                                "should": multTermValue,
+                            }
                         }
-                    }
-            }
-        )
+                }
+            )
+        else :
+            res = self.es.search(
+                index=self.index,
+                body=
+                {
+                    "query":
+                        {
+                            "bool": {
+                                "should": multTermValue
+                            }
+                        },
+                    "sort": [
+                        {"views": "desc"}
+                    ]
+                }
+            )
         results = res['hits']['hits']
         for i in results:
             print(i)
@@ -70,21 +96,30 @@ class QueryProcessor:
         for i in results:
             print(i)
 
-    def generateNormalQuery(self, tokens):
+    def generateNormalQuery(self, flat_list_act):
         print("[INFO] Generating Normal Query")
+        multTermValue = []
+        for i in ["artist","writer","genre","composer","title","songLyricsSearchable"]:
+            multTermValue.append({"terms": {i: flat_list_act,"boost":1}})
+        print(multTermValue)
         res = self.es.search(
             index=self.index,
             body=
             {
                 "query":
-                    {"match_all":
-                         {}
-                     }
+                    {
+                        "bool": {
+                            "should": multTermValue
+                        }
+                    }
             }
         )
-        print(res['hits']['hits'])
+        results = res['hits']['hits']
+        for i in results:
+            print(i)
 
     def generateQuery(self, searchQuery):
+        print("[INFO] Generating Query")
         tokens = self.tokenizer.tokenize(searchQuery)
         stemmed_tokens = self.stemming(tokens)
         act = self.autocorrect(stemmed_tokens)
@@ -94,17 +129,15 @@ class QueryProcessor:
                 flat_list_act.append(item)
         classDict = self.searchClassification(act)
         if (len(classDict) <= 0):
-            self.generateNormalQuery(tokens)
+            self.generateNormalQuery(flat_list_act)
+            # self.generateMLTQuery(searchQuery, ["artist","songLyricsSearchable","writer","composer","genre"])
         else:
             rankedlist = []
             for i in classDict:
-                if (i in ["writer", "composer", "artist", "genre"]):
+                if (i in ["writer", "composer", "artist", "genre", "popularity"]):
                     rankedlist.append(i)
-            #self.generateMLTQuery(searchQuery, classDict)
-            #if ( len(rankedlist) > 0):
-            #    self.generateTermsSingleQuery(flat_list_act, rankedlist[0])
             if ( len(rankedlist) > 0):
-                self.generateTermsMultipleQuery(flat_list_act, rankedlist)
+                self.generateTermsMultipleQuery(flat_list_act, rankedlist, classDict)
             #self.generateFuzzyQuery()
 
     def getSubsets(self, iterable):
@@ -180,8 +213,8 @@ class QueryProcessor:
         suffixList = suffixFile.split()
 
         doc.sort()
-        wordList = doc
         stemmedWordlist = []
+        stemmedWordlist.extend(doc)
 
         for i in doc:
             for j in suffixList:
@@ -192,5 +225,5 @@ class QueryProcessor:
 
         return stemmedWordlist
 
-queryProcessor = QueryProcessor()
-queryProcessor.generateQuery("ගැයු ගුණදා")
+qp = QueryProcessor()
+qp.generateQuery("හොඳම අමරදේව")

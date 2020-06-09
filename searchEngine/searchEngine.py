@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, QLabel
-import preprocessing
+from preprocessing import QueryProcessor
 from PyQt5.QtCore import pyqtSlot
 
 
@@ -80,11 +80,12 @@ class App(QMainWindow):
     @pyqtSlot()
     def search_query(self):
         searchQuery = self.search_box.text()
-        preprocessing.generateNormalQuery(searchQuery)
+        qp.generateQuery(searchQuery)
         QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + ",".join(searchQuery), QMessageBox.Ok, QMessageBox.Ok)
         self.search_box.setText("")
 
 if __name__ == '__main__':
+    qp = QueryProcessor()
     app = QApplication(sys.argv)
     ex = App()
     sys.exit(app.exec_())
