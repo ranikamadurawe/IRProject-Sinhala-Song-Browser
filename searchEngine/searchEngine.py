@@ -14,7 +14,7 @@ class App(QMainWindow):
         self.left = 10
         self.top = 10
         self.width = 900
-        self.height = 600
+        self.height = 640
         self.initUI()
     
     def initUI(self):
@@ -75,13 +75,53 @@ class App(QMainWindow):
         self.movie_search_box.move(100, 440)
         self.movie_search_box.resize(280,30)
 
+        self.title_label = QLabel(self)
+        self.title_label.setText("නම")
+        self.title_label.move(20, 510)
+        self.title_search_box = QLineEdit(self)
+        self.title_search_box.move(100, 510)
+        self.title_search_box.resize(280, 30)
+
+        self.lyrics_label = QLabel(self)
+        self.lyrics_label.setText("සින්‌දු")
+        self.lyrics_label.move(20, 580)
+        self.lyrics_search_box = QLineEdit(self)
+        self.lyrics_search_box.move(100, 580)
+        self.lyrics_search_box.resize(280, 30)
+
         self.show()
     
     @pyqtSlot()
     def search_query(self):
-        searchQuery = self.search_box.text()
-        qp.generateQuery(searchQuery)
-        QMessageBox.question(self, 'Message - pythonspot.com', "You typed: " + ",".join(searchQuery), QMessageBox.Ok, QMessageBox.Ok)
+        facetedQuery = {
+            "artist":self.artist_search_box.text(),
+            "composer":self.composer_search_box.text(),
+            "writer": self.writer_search_box.text(),
+            "key": self.key_search_box.text(),
+            "beat": self.beat_search_box.text(),
+            "movie": self.movie_search_box.text(),
+            "lyrics": self.lyrics_search_box.text(),
+            "title": self.title_search_box.text()
+        }
+        isFaceted = False
+        for i in facetedQuery :
+            if facetedQuery[i] != None and facetedQuery != "":
+                isFaceted = True
+                break
+        if(not isFaceted):
+            searchQuery = self.search_box.text()
+            qp.generateQuery(searchQuery)
+        else:
+            qp.advancedQuery(facetedQuery)
+
+        self.artist_search_box.setText("")
+        self.composer_search_box.setText("")
+        self.writer_search_box.setText("")
+        self.key_search_box.setText("")
+        self.beat_search_box.setText("")
+        self.movie_search_box.setText("")
+        self.lyrics_search_box.setText("")
+        self.title_search_box.setText("")
         self.search_box.setText("")
 
 if __name__ == '__main__':

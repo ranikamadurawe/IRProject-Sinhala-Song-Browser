@@ -11,6 +11,36 @@ class QueryProcessor:
         self.es = Elasticsearch()
         self.index = "160376l-ssb-data-2020-modified-index"
 
+    def advancedQuery(self, queryDictionary):
+
+        multTermValue = []
+        for i in queryDictionary:
+            tokens = self.tokenizer.tokenize(queryDictionary[i])
+            stemmed_tokens = self.stemming(tokens)
+            act = self.autocorrect(stemmed_tokens)
+            flat_list_act = []
+            for sublist in act:
+                for item in sublist:
+                    flat_list_act.append(item)
+            multTermValue.append({"terms": {i:flat_list_act, "boost":2}})
+        print(multTermValue)
+        res = self.es.search(
+            index=self.index,
+            body=
+            {
+                "query":
+                    {
+                        "bool": {
+                            "should": multTermValue,
+                        }
+                    }
+            }
+        )
+        results = res['hits']['hits']
+        for i in results:
+            print(i)
+
+
     def generateMLTQuery(self, searchQuery, rankedlist):
         print("[INFO] Generating ranked Query")
         res = self.es.search(
@@ -45,7 +75,6 @@ class QueryProcessor:
                         multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
         multTermValue.append({"terms": {"songLyricsSearchable":flat_list_act}})
         multTermValue.append({"terms": {"title": flat_list_act}})
-        print(multTermValue)
         if (not sorted):
             res = self.es.search(
                 index=self.index,
@@ -225,5 +254,5 @@ class QueryProcessor:
 
         return stemmedWordlist
 
-qp = QueryProcessor()
-qp.generateQuery("හොඳම අමරදේව")
+#qp = QueryProcessor()
+#qp.generateQuery("හොඳම අමරදේව")
