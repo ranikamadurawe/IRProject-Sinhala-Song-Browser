@@ -128,7 +128,7 @@ class QueryProcessor:
     def generateNormalQuery(self, flat_list_act):
         print("[INFO] Generating Normal Query")
         multTermValue = []
-        for i in ["artist","writer","genre","composer","title","songLyricsSearchable"]:
+        for i in ["artist","writer","genre","composer","title","songLyricsSearchable","movie"]:
             multTermValue.append({"terms": {i: flat_list_act,"boost":1}})
         print(multTermValue)
         res = self.es.search(
@@ -199,7 +199,6 @@ class QueryProcessor:
                         else:
                             rankedQuery[key] = rankedQuery[key] + 1
                         foundsynonym = True
-                        break
                 if foundsynonym:
                     break
         return rankedQuery

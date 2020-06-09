@@ -105,11 +105,12 @@ class App(QMainWindow):
         }
         isFaceted = False
         for i in facetedQuery :
-            if facetedQuery[i] != None and facetedQuery != "":
+            if facetedQuery[i] != None and facetedQuery[i] != "":
                 isFaceted = True
                 break
         if(not isFaceted):
             searchQuery = self.search_box.text()
+            print(searchQuery)
             qp.generateQuery(searchQuery)
         else:
             qp.advancedQuery(facetedQuery)
