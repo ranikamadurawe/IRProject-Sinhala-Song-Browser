@@ -85,5 +85,26 @@
       </div>
     </div>
 
+    <div style="padding: 50px 20px" class="col-md-12" >
+      <ul>
+      <li *ngFor="let hit of results" style="margin: 0 0 50px 0" >
+        <div >
+          <h4>
+            {{hit._source.title}} 
+          </h4>
+           <p>
+            {{hit._source.songLyrics}}
+           </p>
+           <div>
+             sung by : {{hit._source.artist}}
+             written by : {{hit._source.writer}}
+             composed by : {{hit._source.composer}}
+           </div>
+        </div>
+        
+      </li>
+    </ul>
+    </div>
+
   </div>
 </div>

@@ -13,6 +13,7 @@ export class SearchPageComponent implements OnInit {
   search_query : string = '';
   loading = false;
   error = false;
+  results = [];
   backend_server_location = "http://localhost:5000"
 
   advanced_query = {
@@ -51,14 +52,18 @@ export class SearchPageComponent implements OnInit {
       this.error = false;
       this.loading = true;
       if(advancedSet){
-        this.http.post(this.backend_server_location + '/search_faceted', {"facQuery" : this.advanced_query } ).subscribe(data => {
-          console.log(data);
-          this.loading = true
+        this.http.post(this.backend_server_location + '/search_faceted', {"facQuery" : this.advanced_query } ).subscribe( (data: any[]) => {
+          this.loading = false
+          this.number_of_results = data.length;
+          this.results = data;
+          console.log(this.results)
         })
       } else {
-        this.http.post(this.backend_server_location + '/search_general', {"searchQuery" : this.search_query } ).subscribe(data => {
-          console.log(data);
-          this.loading = true
+        this.http.post(this.backend_server_location + '/search_general', {"searchQuery" : this.search_query } ).subscribe( (data: any[]) => {
+          this.loading = false
+          this.number_of_results = data.length;
+          this.results = data;
+          console.log(this.results)
         })
       }
     }
