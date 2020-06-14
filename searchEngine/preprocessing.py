@@ -15,14 +15,15 @@ class QueryProcessor:
 
         multTermValue = []
         for i in queryDictionary:
-            tokens = self.tokenizer.tokenize(queryDictionary[i])
-            stemmed_tokens = self.stemming(tokens)
-            act = self.autocorrect(stemmed_tokens)
-            flat_list_act = []
-            for sublist in act:
-                for item in sublist:
-                    flat_list_act.append(item)
-            multTermValue.append({"terms": {i:flat_list_act, "boost":2}})
+            if (queryDictionary[i] != None and queryDictionary[i] != "") :
+                tokens = self.tokenizer.tokenize(queryDictionary[i])
+                stemmed_tokens = self.stemming(tokens)
+                act = self.autocorrect(stemmed_tokens)
+                flat_list_act = []
+                for sublist in act:
+                    for item in sublist:
+                        flat_list_act.append(item)
+                multTermValue.append({"terms": {i:flat_list_act, "boost":2}})
         print(multTermValue)
         res = self.es.search(
             index=self.index,
@@ -37,8 +38,7 @@ class QueryProcessor:
             }
         )
         results = res['hits']['hits']
-        for i in results:
-            print(i)
+        return results
 
 
     def generateMLTQuery(self, searchQuery, rankedlist):
@@ -59,8 +59,7 @@ class QueryProcessor:
             }
         )
         results = res['hits']['hits']
-        for i in results:
-            print(i)
+        return results
 
     def generateTermsMultipleQuery(self,flat_list_act,fields, classDict):
         multTermValue = []
@@ -112,8 +111,7 @@ class QueryProcessor:
                 }
             )
         results = res['hits']['hits']
-        for i in results:
-            print(i)
+        return results
 
     def generateTermsSingleQuery(self,flat_list_act,field):
         res = self.es.search(
@@ -129,8 +127,7 @@ class QueryProcessor:
             }
         )
         results = res['hits']['hits']
-        for i in results:
-            print(i)
+        return results
 
     def generateNormalQuery(self, flat_list_act):
         print("[INFO] Generating Normal Query")
@@ -151,8 +148,7 @@ class QueryProcessor:
             }
         )
         results = res['hits']['hits']
-        for i in results:
-            print(i)
+        return results
 
     def generateQuery(self, searchQuery):
         print("[INFO] Generating Query")
@@ -165,7 +161,7 @@ class QueryProcessor:
                 flat_list_act.append(item)
         classDict = self.searchClassification(act)
         if (len(classDict) <= 0):
-            self.generateNormalQuery(flat_list_act)
+            results = self.generateNormalQuery(flat_list_act)
             # self.generateMLTQuery(searchQuery, ["artist","songLyricsSearchable","writer","composer","genre"])
         else:
             rankedlist = []
@@ -173,8 +169,9 @@ class QueryProcessor:
                 if (i in ["writer", "composer", "artist", "genre", "popularity"]):
                     rankedlist.append(i)
             if ( len(rankedlist) > 0):
-                self.generateTermsMultipleQuery(flat_list_act, rankedlist, classDict)
+                results = self.generateTermsMultipleQuery(flat_list_act, rankedlist, classDict)
             #self.generateFuzzyQuery()
+        return results
 
     def getSubsets(self, iterable):
         return chain.from_iterable(combinations(iterable, r) for r in range(len(iterable) + 1))
