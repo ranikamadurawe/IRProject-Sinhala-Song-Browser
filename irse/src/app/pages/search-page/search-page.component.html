@@ -4,7 +4,7 @@
 	<div class="row">
 		<div class="col-md-12">
             <div class="input-group" id="adv-search">
-                <input #searchQuery required [(ngModel)]="search_query" type="text" class="form-control" placeholder="Search for Music" />
+                <input #searchQuery [(ngModel)]="search_query" type="text" class="form-control" placeholder="Search for Music" />
                 <div class="input-group-btn">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary"><span class="fa fa-search" (click)="startSearch()"></span></button>
@@ -17,39 +17,39 @@
               <form class="form-horizontal" role="form">
                 <div class="form-group">
                   <label for="contain">Singer</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.artist" name="artist" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Writer</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.writer" name="writer" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Composer</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.composer" name="composer" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Genre</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.genre" name="genre" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">From film</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.movie" name="film" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Key</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.key" name="key" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Beat</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.beat" name="beat" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Lyrics contains the words</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.lyrics" name="lyrics" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
                   <label for="contain">Title contains the words</label>
-                  <input class="form-control" type="text" />
+                  <input [(ngModel)]="advanced_query.title" name="title" class="form-control" type="text" />
                 </div>
                 <button type="submit" class="btn btn-primary"><span class="fa fa-search" ></span></button>
               </form>
