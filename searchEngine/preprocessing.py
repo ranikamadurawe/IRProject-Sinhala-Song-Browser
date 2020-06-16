@@ -92,6 +92,7 @@ class QueryProcessor:
                                 "should": multTermValue,
                             }
                         },
+                "size": 100,
                 "aggs": {
                     "Artist Filter": {
                         "terms": {
@@ -140,6 +141,7 @@ class QueryProcessor:
                     "sort": [
                         {"views": "desc"}
                     ],
+                "size": 100,
                 "aggs": {
                     "Artist Filter": {
                         "terms": {
@@ -209,6 +211,7 @@ class QueryProcessor:
                             "should": multTermValue
                         }
                     },
+                "size": 100,
                 "aggs": {
                     "Artist Filter": {
                         "terms": {

@@ -85,6 +85,24 @@
       </div>
     </div>
 
+    <div>
+      <div>
+        <select  class="form-control" [(ngModel)]="filter.artist">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Artist Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      <select  class="form-control" [(ngModel)]="filter.writer">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Writer Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+      <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
+    </div>
+
     <div style="padding: 50px 20px" class="col-md-12" >
       <ul>
       <li *ngFor="let hit of results" style="margin: 0 0 50px 0" >

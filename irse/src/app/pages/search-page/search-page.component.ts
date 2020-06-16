@@ -14,6 +14,10 @@ export class SearchPageComponent implements OnInit {
   loading = false;
   error = false;
   results = [];
+  aggregations = {
+    "Artist Filter" : [],
+    "Writer Filter" : []
+  };
   backend_server_location = "http://localhost:5000"
 
   advanced_query = {
@@ -27,9 +31,25 @@ export class SearchPageComponent implements OnInit {
     "lyrics":"",
     "title":""
   }
+
+  filter = {
+    "artist" : "",
+    "writer": "",
+    "composer":"",
+    "genre":"",
+    "movie":"",
+    "key":"",
+    "beat":"",
+    "views":""
+  }
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+  }
+
+  filter_query() {
+    console.log(this.filter)
   }
 
   checkAdvancedQuery(){
@@ -53,16 +73,20 @@ export class SearchPageComponent implements OnInit {
       this.loading = true;
       if(advancedSet){
         this.http.post(this.backend_server_location + '/search_faceted', {"facQuery" : this.advanced_query } ).subscribe( (data: any[]) => {
+          console.log(data)
           this.loading = false
           this.number_of_results = data.length;
-          this.results = data;
+          this.results = data['hits']['hits'];
+          this.aggregations = data['aggregrations']
           console.log(this.results)
         })
       } else {
         this.http.post(this.backend_server_location + '/search_general', {"searchQuery" : this.search_query } ).subscribe( (data: any[]) => {
+          console.log(data)
           this.loading = false
           this.number_of_results = data.length;
-          this.results = data;
+          this.results = data['hits']['hits'];
+          this.aggregations = data['aggregations']
           console.log(this.results)
         })
       }
