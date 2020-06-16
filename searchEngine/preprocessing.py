@@ -9,7 +9,7 @@ class QueryProcessor:
     def __init__(self):
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
-        self.index = "160376l-ssb-data-2020-modified-index"
+        self.index = "160376l-ssb-data-2020-modified-index2"
 
     def advancedQuery(self, queryDictionary):
 
@@ -91,7 +91,39 @@ class QueryProcessor:
                             "bool": {
                                 "should": multTermValue,
                             }
+                        },
+                "aggs": {
+                    "Artist Filter": {
+                        "terms": {
+                            "field": "artist",
+                            "size": 10
                         }
+                    },
+                    "Writer Filter": {
+                        "terms": {
+                            "field": "writer",
+                            "size": 10
+                        }
+                    },
+                    "View Filter": {
+                        "range": {
+                            "field": "views",
+                            "ranges": [
+                                {
+                                    "from": 0,
+                                    "to": 1000
+                                },
+                                {
+                                    "from": 1000,
+                                    "to": 2000
+                                },
+                                {
+                                    "from": 2000,
+                                }
+                            ]
+                        }
+                    }
+                }
                 }
             )
         else :
@@ -107,10 +139,42 @@ class QueryProcessor:
                         },
                     "sort": [
                         {"views": "desc"}
-                    ]
+                    ],
+                "aggs": {
+                    "Artist Filter": {
+                        "terms": {
+                            "field": "artist.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Writer Filter": {
+                        "terms": {
+                            "field": "writer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "View Filter": {
+                        "range": {
+                            "field": "views",
+                            "ranges": [
+                                {
+                                    "from": 0,
+                                    "to": 1000
+                                },
+                                {
+                                    "from": 1000,
+                                    "to": 2000
+                                },
+                                {
+                                    "from": 2000,
+                                }
+                            ]
+                        }
+                    }
+                }
                 }
             )
-        results = res['hits']['hits']
+        results = res
         return results
 
     def generateTermsSingleQuery(self,flat_list_act,field):
@@ -144,10 +208,42 @@ class QueryProcessor:
                         "bool": {
                             "should": multTermValue
                         }
+                    },
+                "aggs": {
+                    "Artist Filter": {
+                        "terms": {
+                            "field": "artist.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Writer Filter": {
+                        "terms": {
+                            "field": "writer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "View Filter": {
+                        "range": {
+                            "field": "views",
+                            "ranges": [
+                                {
+                                    "from": 0,
+                                    "to": 1000
+                                },
+                                {
+                                    "from": 1000,
+                                    "to": 2000
+                                },
+                                {
+                                    "from": 2000,
+                                }
+                            ]
+                        }
                     }
+                }
             }
         )
-        results = res['hits']['hits']
+        results = res
         return results
 
     def generateQuery(self, searchQuery):
