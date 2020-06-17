@@ -96,13 +96,31 @@ class QueryProcessor:
                 "aggs": {
                     "Artist Filter": {
                         "terms": {
-                            "field": "artist",
+                            "field": "artist.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Composer Filter": {
+                        "terms": {
+                            "field": "composer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Genre Filter": {
+                        "terms": {
+                            "field": "genre.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Movie Filter": {
+                        "terms": {
+                            "field": "movie.keyword",
                             "size": 10
                         }
                     },
                     "Writer Filter": {
                         "terms": {
-                            "field": "writer",
+                            "field": "writer.keyword",
                             "size": 10
                         }
                     },
@@ -120,6 +138,10 @@ class QueryProcessor:
                                 },
                                 {
                                     "from": 2000,
+                                    "to": 3000
+                                },
+                                {
+                                    "from": 3000
                                 }
                             ]
                         }
@@ -149,6 +171,24 @@ class QueryProcessor:
                             "size": 10
                         }
                     },
+                    "Composer Filter": {
+                        "terms": {
+                            "field": "composer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Genre Filter": {
+                        "terms": {
+                            "field": "genre.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Movie Filter": {
+                        "terms": {
+                            "field": "movie.keyword",
+                            "size": 10
+                        }
+                    },
                     "Writer Filter": {
                         "terms": {
                             "field": "writer.keyword",
@@ -169,6 +209,10 @@ class QueryProcessor:
                                 },
                                 {
                                     "from": 2000,
+                                    "to": 3000
+                                },
+                                {
+                                    "from": 3000
                                 }
                             ]
                         }
@@ -219,6 +263,24 @@ class QueryProcessor:
                             "size": 10
                         }
                     },
+                    "Composer Filter": {
+                        "terms": {
+                            "field": "composer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Genre Filter": {
+                        "terms": {
+                            "field": "genre.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Movie Filter": {
+                        "terms": {
+                            "field": "movie.keyword",
+                            "size": 10
+                        }
+                    },
                     "Writer Filter": {
                         "terms": {
                             "field": "writer.keyword",
@@ -239,6 +301,10 @@ class QueryProcessor:
                                 },
                                 {
                                     "from": 2000,
+                                    "to": 3000
+                                },
+                                {
+                                    "from": 3000
                                 }
                             ]
                         }

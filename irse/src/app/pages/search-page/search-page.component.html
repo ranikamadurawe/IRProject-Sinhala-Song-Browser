@@ -99,13 +99,38 @@
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
+      <select  class="form-control" [(ngModel)]="filter.composer">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Composer Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      <select  class="form-control" [(ngModel)]="filter.genre">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Genre Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      <select  class="form-control" [(ngModel)]="filter.movie">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Movie Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      <select  class="form-control" [(ngModel)]="filter.views">
+        <option  class="form-control" *ngFor="let bucket of aggregations['View Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
       </div>
+      <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
       <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
     </div>
 
     <div style="padding: 50px 20px" class="col-md-12" >
       <ul>
-      <li *ngFor="let hit of results" style="margin: 0 0 50px 0" >
+      <li *ngFor="let hit of shown_results" style="margin: 0 0 50px 0" >
         <div >
           <h4>
             {{hit._source.title}} 
@@ -117,6 +142,13 @@
              sung by : {{hit._source.artist}}
              written by : {{hit._source.writer}}
              composed by : {{hit._source.composer}}
+           </div>
+           <div>
+             viewed {{hit._source.views}} times
+             shared {{hit._source.shares}} times
+           </div>
+           <div>
+             Genres : {{hit._source.genres}} 
            </div>
         </div>
         
