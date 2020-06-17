@@ -160,9 +160,9 @@ class QueryProcessor:
                                 "should": multTermValue
                             }
                         },
-                    "sort": [
-                        {"views": "desc"}
-                    ],
+                    #"sort": [
+                    #    {"views": "desc"}
+                    #],
                 "size": 100,
                 "aggs": {
                     "Artist Filter": {
@@ -399,6 +399,11 @@ class QueryProcessor:
                 allWords[token_number].append(token)
         return allWords
 
+    def rreplace(self,s, old, new, occurrence):
+        li = s.rsplit(old, occurrence)
+        return new.join(li)
+
+
     # Reduce strings to simple formats based on rules
     def stemming(self, doc):
         suffFileDirec = "suffixes.txt"
@@ -416,10 +421,8 @@ class QueryProcessor:
         for i in doc:
             for j in suffixList:
                 if i.endswith(j):
-                    i = i.replace(j, "")
-                    break
-            stemmedWordlist.append(i)
-
+                    stemmedWordlist.append(self.rreplace(i,j, "",1))
+        print(stemmedWordlist)
         return stemmedWordlist
 
 #qp = QueryProcessor()
