@@ -71,19 +71,19 @@ export class SearchPageComponent implements OnInit {
           var from = this.filter[key].split("-")[0]
           var to = this.filter[key].split("-")[1]
           if (from != "*"){
-	    if (result['_source'][key] >= parseInt(from)){
-	       return_val = return_val && true;
+	    if (result['_source'][key] < parseInt(from)){
+	       return_val = return_val && false;
 	    } else {
-               return_val = return_val && false;
-            }
+               return_val = return_val && true;
+            } 
           } else {
              return_val = return_val && true;
           }
           if (to != "*"){
-            if (result['_source'][key] <= parseInt(to)){
-	       return_val = return_val && true;
+            if (result['_source'][key] > parseInt(to)){
+	       return_val = return_val && false;
 	    } else {
-               return_val = return_val && false;
+               return_val = return_val && true;
             }
           } else {
              return_val = return_val && true;

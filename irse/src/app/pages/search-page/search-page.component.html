@@ -7,7 +7,7 @@
                 <input #searchQuery [(ngModel)]="search_query" type="text" class="form-control" placeholder="Search for Music" />
                 <div class="input-group-btn">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary"><span class="fa fa-search" (click)="startSearch()"></span></button>
+                        <button type="button" class="btn btn-primary" (click)="startSearch()"><span class="fa fa-search" ></span></button>
                         <button type="button" class="btn btn-secondary" (click)="showAdvanced = !showAdvanced">Show Advanced</button>
 
                       </div>
@@ -61,6 +61,73 @@
   
   <div class="container">
   <div class="row" style="padding: 50px 20px">
+
+
+ 
+      <div class="col-md-4">
+        Artist:
+        <select  class="form-control" [(ngModel)]="filter.artist">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Artist Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+      <div class="col-md-4">
+      Writer:
+      <select  class="form-control" [(ngModel)]="filter.writer">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Writer Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+      <div class="col-md-4">
+      Composer:
+      <select  class="form-control" [(ngModel)]="filter.composer">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Composer Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+      <div class="col-md-4">
+      Genre:
+      <select  class="form-control" [(ngModel)]="filter.genre">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Genre Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+      <div class="col-md-4">
+      Movie:
+      <select  class="form-control" [(ngModel)]="filter.movie">
+        <option  class="form-control" *ngFor="let bucket of aggregations['Movie Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+      <div class="col-md-4">
+      Views:
+      <select  class="form-control" [(ngModel)]="filter.views">
+        <option  class="form-control" *ngFor="let bucket of aggregations['View Filter']['buckets']" 
+            [value]="bucket.key" >
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+      </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+          <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
+      <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
+       </div>
+  </div>
+
+   <div class="row" style="padding: 50px 20px">
     <div class="col-md-12">
       Search results yielded {{number_of_results}} possible songs
     </div>
@@ -85,49 +152,6 @@
       </div>
     </div>
 
-    <div>
-      <div>
-        <select  class="form-control" [(ngModel)]="filter.artist">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Artist Filter']['buckets']" 
-            [value]="bucket.key" >
-          {{bucket.key}} {{bucket.doc_count}}
-        </option>
-      </select>
-      <select  class="form-control" [(ngModel)]="filter.writer">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Writer Filter']['buckets']" 
-            [value]="bucket.key" >
-          {{bucket.key}} {{bucket.doc_count}}
-        </option>
-      </select>
-      <select  class="form-control" [(ngModel)]="filter.composer">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Composer Filter']['buckets']" 
-            [value]="bucket.key" >
-          {{bucket.key}} {{bucket.doc_count}}
-        </option>
-      </select>
-      <select  class="form-control" [(ngModel)]="filter.genre">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Genre Filter']['buckets']" 
-            [value]="bucket.key" >
-          {{bucket.key}} {{bucket.doc_count}}
-        </option>
-      </select>
-      <select  class="form-control" [(ngModel)]="filter.movie">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Movie Filter']['buckets']" 
-            [value]="bucket.key" >
-          {{bucket.key}} {{bucket.doc_count}}
-        </option>
-      </select>
-      <select  class="form-control" [(ngModel)]="filter.views">
-        <option  class="form-control" *ngFor="let bucket of aggregations['View Filter']['buckets']" 
-            [value]="bucket.key" >
-          {{bucket.key}} {{bucket.doc_count}}
-        </option>
-      </select>
-      </div>
-      <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
-      <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
-    </div>
-
     <div style="padding: 50px 20px" class="col-md-12" >
       <ul>
       <li *ngFor="let hit of shown_results" style="margin: 0 0 50px 0" >
@@ -135,8 +159,7 @@
           <h4>
             {{hit._source.title}} 
           </h4>
-           <p>
-            {{hit._source.songLyrics}}
+           <p [innerHTML]="hit._source.songLyrics">
            </p>
            <div>
              sung by : {{hit._source.artist}}
@@ -148,7 +171,7 @@
              shared {{hit._source.shares}} times
            </div>
            <div>
-             Genres : {{hit._source.genres}} 
+             Genres : {{hit._source.genre}} 
            </div>
         </div>
         
