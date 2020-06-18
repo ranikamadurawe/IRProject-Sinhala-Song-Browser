@@ -9,7 +9,7 @@ class QueryProcessor:
     def __init__(self):
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
-        self.index = "160376l-ssb-data-2020-modified-index2"
+        self.index = "160376l-ssb-data-2020-modified-index3"
 
     def advancedQuery(self, queryDictionary):
 
