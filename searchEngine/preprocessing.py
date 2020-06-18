@@ -23,6 +23,7 @@ class QueryProcessor:
                 for sublist in act:
                     for item in sublist:
                         flat_list_act.append(item)
+                flat_list_act.append(queryDictionary[i])
                 multTermValue.append({"terms": {i:flat_list_act, "boost":2}})
         print(multTermValue)
         res = self.es.search(
@@ -34,10 +35,65 @@ class QueryProcessor:
                         "bool": {
                             "should": multTermValue,
                         }
+                    },
+                    "size": 100,
+                "aggs": {
+                    "Artist Filter": {
+                        "terms": {
+                            "field": "artist.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Composer Filter": {
+                        "terms": {
+                            "field": "composer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Genre Filter": {
+                        "terms": {
+                            "field": "genre.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Movie Filter": {
+                        "terms": {
+                            "field": "movie.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Writer Filter": {
+                        "terms": {
+                            "field": "writer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "View Filter": {
+                        "range": {
+                            "field": "views",
+                            "ranges": [
+                                {
+                                    "from": 0,
+                                    "to": 1000
+                                },
+                                {
+                                    "from": 1000,
+                                    "to": 2000
+                                },
+                                {
+                                    "from": 2000,
+                                    "to": 3000
+                                },
+                                {
+                                    "from": 3000
+                                }
+                            ]
+                        }
                     }
+                }
             }
         )
-        results = res['hits']['hits']
+        results = res
         return results
 
 
@@ -150,6 +206,7 @@ class QueryProcessor:
                 }
             )
         else :
+            print("run query")
             res = self.es.search(
                 index=self.index,
                 body=
@@ -160,9 +217,10 @@ class QueryProcessor:
                                 "should": multTermValue
                             }
                         },
-                    #"sort": [
-                    #    {"views": "desc"}
-                    #],
+                    "sort": [
+                        "_score",
+                        {"views":  { "order": "desc" }}
+                    ],
                 "size": 100,
                 "aggs": {
                     "Artist Filter": {

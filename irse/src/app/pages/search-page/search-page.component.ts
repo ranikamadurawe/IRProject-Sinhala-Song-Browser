@@ -139,7 +139,9 @@ export class SearchPageComponent implements OnInit {
           this.loading = false
           this.number_of_results = data.length;
           this.shown_results = data['hits']['hits'];
-          this.aggregations = data['aggregrations']
+          this.results = data['hits']['hits'];
+          this.aggregations = data['aggregations']
+          console.log(this.aggregations)
           console.log(this.shown_results)
         })
       } else {
