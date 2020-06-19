@@ -173,21 +173,23 @@
         <li *ngFor="let hit of shown_results" style="margin: 0 0 50px 0">
           <div>
             <h4>
-              {{hit._source.title}}
+              <b>{{hit._source.title}}</b>
             </h4>
-            <p [innerHTML]="hit._source.songLyrics">
+            <br/>
+            <p style="white-space: pre-line;">
+               {{hit._source.songLyrics | removeSymbol}}
             </p>
             <div>
-              {{english ? "Sung by" : "ගායනා කරේ"}} : {{hit._source.artist}}
-              {{english ? "Written by" : "ලිව්‌වේ"}} : {{hit._source.writer}}
-              {{english ? "Composed by" : "සංගීතය සපයා ඇත්‌තේ"}} : {{hit._source.composer}}
+              <b>{{english ? "Sung by" : "ගායනා කරේ"}}</b> : {{hit._source.artist}}&nbsp;&nbsp;&nbsp;&nbsp;
+              <b>{{english ? "Written by" : "ලිව්‌වේ"}}</b> : {{hit._source.writer}}&nbsp;&nbsp;&nbsp;&nbsp;
+              <b>{{english ? "Composed by" : "සංගීතය සපයා ඇත්‌තේ"}}</b> : {{hit._source.composer}}&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <div>
-              {{english ? "Viewed" : ""}} {{hit._source.views}} {{english ? "times" : "වතාවක් දැක ඇත"}}
-              {{english ? "Shared" : ""}} {{hit._source.shares}} {{english ? "times" : "වතාවක් බෙදා ඇත"}}
+              {{english ? "Viewed" : ""}} {{hit._source.views}} {{english ? "times" : "වතාවක් දැක ඇත"}}&nbsp;&nbsp;&nbsp;&nbsp;
+              {{english ? "Shared" : ""}} {{hit._source.shares}} {{english ? "times" : "වතාවක් බෙදා ඇත"}}&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <div>
-              {{english ? "Genres" : "වර්ග"}} : {{hit._source.genre}}
+              <b>{{english ? "Genres" : "වර්ග"}} :</b> {{hit._source.genre}}
             </div>
           </div>
 
