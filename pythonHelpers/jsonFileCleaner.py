@@ -17,11 +17,10 @@ for num, doc in enumerate(elastic_docs):
 
     # get _id from document
     _id = doc["_id"]
-    doc_data = pandas.Series(source_data, name = _id)
+    doc_data = pandas.Series(source_data, name=_id)
 
     # append the Series object to the DataFrame object
     docs = docs.append(doc_data)
-
 
 for index, row in docs.iterrows():
     newlinesplit = row['songLyrics'].split("\n")
@@ -35,9 +34,4 @@ for index, row in docs.iterrows():
     docs.at[index, 'songLyricsSearchable'] = newSongSearch
     docs.at[index, 'songLyrics'] = newSongLyric
 
-
-docs.to_json("songs.json","records")
-
-
-
-
+docs.to_json("songs.json", "records")

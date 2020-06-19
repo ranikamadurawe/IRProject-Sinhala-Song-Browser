@@ -9,7 +9,6 @@ result = elastic_client.search(index='160376l-ssb-data-2020_backup', body={}, si
 
 all_documents = result['hits']['hits']
 
-
 docs = pandas.DataFrame()
 for num, doc in enumerate(all_documents):
     source_data = doc["_source"]
@@ -35,15 +34,6 @@ for index, row in docs.iterrows():
     response = elastic_client.update(
         index='160376l-ssb-data-2020_backup',
         doc_type="_doc",
-        id = index,
-        body = source_to_update
+        id=index,
+        body=source_to_update
     )
-
-
-
-
-
-
-
-
-
