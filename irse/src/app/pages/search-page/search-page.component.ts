@@ -115,6 +115,22 @@ export class SearchPageComponent implements OnInit {
     return advancedOptionsSet;
   }
 
+  resetSearch(){
+    this.reset_filter();
+    this.search_query = "";
+    this.advanced_query = {
+      "artist" : "",
+      "writer": "",
+      "composer":"",
+      "genre":"",
+      "movie":"",
+      "key":"",
+      "beat":"",
+      "lyrics":"",
+      "title":""
+    }
+  }
+
   startSearch(){
     this.filter = {
       "artist" : "",

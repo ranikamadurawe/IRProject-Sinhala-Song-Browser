@@ -1,5 +1,14 @@
 
-
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">{{english ? "Search Engine for Sinhala Songs" : "සිංහල ගීතයේ පද රචනා සෙවුම් යන්ත්‍රය"}}</a>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <button class="nav-link btn js-scroll-trigger" (click)="english = !english">{{english ? "English" : "සිංහල"}}</button>
+        </li>
+      </ul>
+    </div>
+</nav>
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
@@ -150,9 +159,7 @@
     </div>
 
     <div style="padding: 50px 20px" class="col-md-12" *ngIf="error">
-      <div class="fa-3x">
-        No Search Query
-      </div>
+      No Search Query
     </div>
 
     <div style="padding: 50px 20px" class="col-md-12" >
