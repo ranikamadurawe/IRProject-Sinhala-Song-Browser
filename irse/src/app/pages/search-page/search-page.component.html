@@ -7,59 +7,65 @@
                 <input #searchQuery [(ngModel)]="search_query" type="text" class="form-control" placeholder="Search for Music" />
                 <div class="input-group-btn">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" (click)="startSearch()"><span class="fa fa-search" ></span></button>
-                        <button type="button" class="btn btn-secondary" (click)="showAdvanced = !showAdvanced">Show Advanced</button>
-
+                        <button type="button" class="btn btn-primary" (click)="startSearch()" title="Search"><span class="fa fa-search" ></span></button>
+                        <button type="button" class="btn btn-secondary" (click)="showAdvanced = !showAdvanced" title="Advanced"><span class="fa fa-cogs" ></span></button>
+                        <button type="button" class="btn btn-warning" (click)="showFilter = !showFilter" title="Filter"><span class="fa fa-filter" ></span></button>
                       </div>
                 </div>
             </div>
-            <div *ngIf="showAdvanced" >
-              <form class="form-horizontal" role="form">
-                <div class="form-group">
-                  <label for="contain">Singer</label>
-                  <input [(ngModel)]="advanced_query.artist" name="artist" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Writer</label>
-                  <input [(ngModel)]="advanced_query.writer" name="writer" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Composer</label>
-                  <input [(ngModel)]="advanced_query.composer" name="composer" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Genre</label>
-                  <input [(ngModel)]="advanced_query.genre" name="genre" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">From film</label>
-                  <input [(ngModel)]="advanced_query.movie" name="film" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Key</label>
-                  <input [(ngModel)]="advanced_query.key" name="key" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Beat</label>
-                  <input [(ngModel)]="advanced_query.beat" name="beat" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Lyrics contains the words</label>
-                  <input [(ngModel)]="advanced_query.lyrics" name="lyrics" class="form-control" type="text" />
-                </div>
-                <div class="form-group">
-                  <label for="contain">Title contains the words</label>
-                  <input [(ngModel)]="advanced_query.title" name="title" class="form-control" type="text" />
-                </div>
-              </form>
-          </div>
           </div>
         </div>
         
+            <div *ngIf="showAdvanced" >
+              <div class="row" style="padding: 15px 15px">
+                <div class="col-md-4" >
+                  <label for="contain">Singer</label>
+                  <input [(ngModel)]="advanced_query.artist" name="artist" class="form-control" type="text" />
+                </div>
+                <div class="col-md-4">
+                  <label for="contain">Writer</label>
+                  <input [(ngModel)]="advanced_query.writer" name="writer" class="form-control" type="text" />
+                </div>
+                <div class="col-md-4">
+                  <label for="contain">Composer</label>
+                  <input [(ngModel)]="advanced_query.composer" name="composer" class="form-control" type="text" />
+                </div>
+              </div>
+              <div class="row" style="padding: 15px 15px">
+                <div class="col-md-3">
+                  <label for="contain">Genre</label>
+                  <input [(ngModel)]="advanced_query.genre" name="genre" class="form-control" type="text" />
+                </div>
+                <div class="col-md-3">
+                  <label for="contain">From film</label>
+                  <input [(ngModel)]="advanced_query.movie" name="film" class="form-control" type="text" />
+                </div>
+                <div class="col-md-3">
+                  <label for="contain">Key</label>
+                  <input [(ngModel)]="advanced_query.key" name="key" class="form-control" type="text" />
+                </div>
+                <div class="col-md-3">
+                  <label for="contain">Beat</label>
+                  <input [(ngModel)]="advanced_query.beat" name="beat" class="form-control" type="text" />
+                </div>
+              </div>
+              <div class="row" style="padding: 15px 15px">
+                <div class="col-md-6">
+                  <label for="contain">Lyrics contains the words</label>
+                  <input [(ngModel)]="advanced_query.lyrics" name="lyrics" class="form-control" type="text" />
+                </div>
+                <div class=" col-md-6">
+                  <label for="contain">Title contains the words</label>
+                  <input [(ngModel)]="advanced_query.title" name="title" class="form-control" type="text" />
+                </div>
+          </div>
+        </div>  
+        
+        
   </div>
   
-  <div class="container">
-  <div class="row" style="padding: 50px 20px">
+  <div class="container" >
+  <div class="row" style="padding: 50px 20px" *ngIf="showFilter">
 
 
  
@@ -119,7 +125,7 @@
       </div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="showFilter">
     <div class="col-md-12">
           <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
       <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
@@ -131,9 +137,7 @@
       Search results yielded {{number_of_results}} possible songs
     </div>
 
-    <div style="padding: 50px 20px" class="col-md-12" *ngIf="number_of_results==0 && search_query === ''  && !error && !loading ">
-      Start typing your favourite lyrics
-    </div>
+
 
     <div style="padding: 50px 20px" class="col-md-12" *ngIf="number_of_results==0 && search_query !== '' && !error && !loading">
       No hits found try something else
