@@ -9,41 +9,41 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SearchPageComponent implements OnInit {
 
-  number_of_results : number = 0;
-  search_query : string = '';
+  number_of_results: number = 0;
+  search_query: string = '';
   loading = false;
   error = false;
   shown_results = [];
   results = [];
   aggregations = {
-    "Artist Filter" : [],
-    "Writer Filter" : [],
-    "Composer Filter" : [],
-    "Genre Filter":[],
-    "Movie Filter":[],
-    "View Filter":[]
+    "Artist Filter": [],
+    "Writer Filter": [],
+    "Composer Filter": [],
+    "Genre Filter": [],
+    "Movie Filter": [],
+    "View Filter": []
   };
   backend_server_location = "http://localhost:5000"
 
   advanced_query = {
-    "artist" : "",
+    "artist": "",
     "writer": "",
-    "composer":"",
-    "genre":"",
-    "movie":"",
-    "key":"",
-    "beat":"",
-    "lyrics":"",
-    "title":""
+    "composer": "",
+    "genre": "",
+    "movie": "",
+    "key": "",
+    "beat": "",
+    "lyrics": "",
+    "title": ""
   }
 
   filter = {
-    "artist" : "",
+    "artist": "",
     "writer": "",
-    "composer":"",
-    "genre":"",
-    "movie":"",
-    "views":""
+    "composer": "",
+    "genre": "",
+    "movie": "",
+    "views": ""
   }
 
   constructor(private http: HttpClient) { }
@@ -53,46 +53,46 @@ export class SearchPageComponent implements OnInit {
 
   reset_filter() {
     this.filter = {
-      "artist" : "",
+      "artist": "",
       "writer": "",
-      "composer":"",
-      "genre":"",
-      "movie":"",
-      "views":""
+      "composer": "",
+      "genre": "",
+      "movie": "",
+      "views": ""
     }
     this.shown_results = this.results
   }
 
   filter_query() {
-    this.shown_results= this.results.filter(result => {
+    this.shown_results = this.results.filter(result => {
       var return_val = true;
       for (var key in this.filter) {
-        if (key == "views"){
+        if (key == "views") {
           var from = this.filter[key].split("-")[0]
           var to = this.filter[key].split("-")[1]
-          if (from != "*"){
-	    if (result['_source'][key] < parseInt(from)){
-	       return_val = return_val && false;
-	    } else {
-               return_val = return_val && true;
-            } 
-          } else {
-             return_val = return_val && true;
-          }
-          if (to != "*"){
-            if (result['_source'][key] > parseInt(to)){
-	       return_val = return_val && false;
-	    } else {
-               return_val = return_val && true;
+          if (from != "*") {
+            if (result['_source'][key] < parseInt(from)) {
+              return_val = return_val && false;
+            } else {
+              return_val = return_val && true;
             }
           } else {
-             return_val = return_val && true;
+            return_val = return_val && true;
+          }
+          if (to != "*") {
+            if (result['_source'][key] > parseInt(to)) {
+              return_val = return_val && false;
+            } else {
+              return_val = return_val && true;
+            }
+          } else {
+            return_val = return_val && true;
           }
         } else {
-          if (this.filter[key] == "" || this.filter[key] == null){
+          if (this.filter[key] == "" || this.filter[key] == null) {
             return_val = return_val && true;
           } else {
-            if(this.filter[key] == result['_source'][key]){
+            if (this.filter[key] == result['_source'][key]) {
               return_val = return_val && true;
             } else {
               return_val = return_val && false;
@@ -104,10 +104,10 @@ export class SearchPageComponent implements OnInit {
     });
   }
 
-  checkAdvancedQuery(){
+  checkAdvancedQuery() {
     var advancedOptionsSet = false;
-    for (var key in this.advanced_query){
-      if( !(this.advanced_query[key] == '') && !(this.advanced_query[key]== null) ){
+    for (var key in this.advanced_query) {
+      if (!(this.advanced_query[key] == '') && !(this.advanced_query[key] == null)) {
         advancedOptionsSet = true;
         break;
       }
@@ -115,42 +115,42 @@ export class SearchPageComponent implements OnInit {
     return advancedOptionsSet;
   }
 
-  resetSearch(){
+  resetSearch() {
     this.reset_filter();
     this.search_query = "";
     this.advanced_query = {
-      "artist" : "",
+      "artist": "",
       "writer": "",
-      "composer":"",
-      "genre":"",
-      "movie":"",
-      "key":"",
-      "beat":"",
-      "lyrics":"",
-      "title":""
+      "composer": "",
+      "genre": "",
+      "movie": "",
+      "key": "",
+      "beat": "",
+      "lyrics": "",
+      "title": ""
     }
   }
 
-  startSearch(){
+  startSearch() {
     this.filter = {
-      "artist" : "",
+      "artist": "",
       "writer": "",
-      "composer":"",
-      "genre":"",
-      "movie":"",
-      "views":""
+      "composer": "",
+      "genre": "",
+      "movie": "",
+      "views": ""
     }
     this.results = []
     this.shown_results = []
     var advancedSet = this.checkAdvancedQuery()
-    if ( (this.search_query === '' || this.search_query === null ) && !advancedSet) {
+    if ((this.search_query === '' || this.search_query === null) && !advancedSet) {
       this.error = true;
       this.loading = false;
     } else {
       this.error = false;
       this.loading = true;
-      if(advancedSet){
-        this.http.post(this.backend_server_location + '/search_faceted', {"facQuery" : this.advanced_query } ).subscribe( (data: any[]) => {
+      if (advancedSet) {
+        this.http.post(this.backend_server_location + '/search_faceted', { "facQuery": this.advanced_query }).subscribe((data: any[]) => {
           console.log(data)
           this.loading = false
           this.number_of_results = data.length;
@@ -161,7 +161,7 @@ export class SearchPageComponent implements OnInit {
           console.log(this.shown_results)
         })
       } else {
-        this.http.post(this.backend_server_location + '/search_general', {"searchQuery" : this.search_query } ).subscribe( (data: any[]) => {
+        this.http.post(this.backend_server_location + '/search_general', { "searchQuery": this.search_query }).subscribe((data: any[]) => {
           console.log(data)
           this.loading = false
           this.number_of_results = data.length;

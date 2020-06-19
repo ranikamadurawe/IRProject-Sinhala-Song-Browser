@@ -1,154 +1,160 @@
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">{{english ? "Search Engine for Sinhala Songs" : "සිංහල ගීතයේ පද රචනා සෙවුම් යන්ත්‍රය"}}</a>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <button class="nav-link btn js-scroll-trigger" (click)="english = !english">{{english ? "English" : "සිංහල"}}</button>
-        </li>
-      </ul>
-    </div>
+  <a class="navbar-brand"
+    href="#">{{english ? "Search Engine for Sinhala Songs" : "සිංහල ගීතයේ පද රචනා සෙවුම් යන්ත්‍රය"}}</a>
+  <div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <button class="nav-link btn js-scroll-trigger"
+          (click)="english = !english">{{english ? "English" : "සිංහල"}}</button>
+      </li>
+    </ul>
+  </div>
 </nav>
 <div class="container">
-	<div class="row">
-		<div class="col-md-12">
-            <div class="input-group" id="adv-search">
-                <input #searchQuery [(ngModel)]="search_query" type="text" class="form-control" placeholder='{{english ? "Search for Music" : "සංගීතය සොයන්න"}}' />
-                <div class="input-group-btn">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" (click)="startSearch()" title='{{english ? "Search" : "සොයන්න"}}'><span class="fa fa-search" ></span></button>
-                        <button type="button" class="btn btn-secondary" (click)="showAdvanced = !showAdvanced" title='{{english ? "Advanced" : "විකල්ප සෙවුම් යන්ත්‍රය"}}'><span class="fa fa-cogs" ></span></button>
-                        <button type="button" class="btn btn-warning" (click)="showFilter = !showFilter" title='{{english ? "Filter" : "ප්‍රතිඵල පෙරහන් කරන්න"}}'><span class="fa fa-filter" ></span></button>
-                      </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="input-group" id="adv-search">
+        <input #searchQuery [(ngModel)]="search_query" type="text" class="form-control"
+          placeholder='{{english ? "Search for Music" : "සංගීතය සොයන්න"}}' />
+        <div class="input-group-btn">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" (click)="startSearch()"
+              title='{{english ? "Search" : "සොයන්න"}}'><span class="fa fa-search"></span></button>
+            <button type="button" class="btn btn-secondary" (click)="showAdvanced = !showAdvanced"
+              title='{{english ? "Advanced" : "විකල්ප සෙවුම් යන්ත්‍රය"}}'><span class="fa fa-cogs"></span></button>
+            <button type="button" class="btn btn-warning" (click)="showFilter = !showFilter"
+              title='{{english ? "Filter" : "ප්‍රතිඵල පෙරහන් කරන්න"}}'><span class="fa fa-filter"></span></button>
           </div>
         </div>
-        
-            <div *ngIf="showAdvanced" >
-              <div class="row" style="padding: 15px 15px">
-                <div class="col-md-4" >
-                  <label for="contain">{{english ? "Singer" : "ගායකයා"}}</label>
-                  <input [(ngModel)]="advanced_query.artist" name="artist" class="form-control" type="text" />
-                </div>
-                <div class="col-md-4">
-                  <label for="contain">{{english ? "Writer" : "රචකයා"}}</label>
-                  <input [(ngModel)]="advanced_query.writer" name="writer" class="form-control" type="text" />
-                </div>
-                <div class="col-md-4">
-                  <label for="contain">{{english ? "Composer" : "සංගීතය"}}</label>
-                  <input [(ngModel)]="advanced_query.composer" name="composer" class="form-control" type="text" />
-                </div>
-              </div>
-              <div class="row" style="padding: 15px 15px">
-                <div class="col-md-3">
-                  <label for="contain">{{english ? "Genre" : "වර්ගය"}}</label>
-                  <input [(ngModel)]="advanced_query.genre" name="genre" class="form-control" type="text" />
-                </div>
-                <div class="col-md-3">
-                  <label for="contain">{{english ? "From Film" : "චිත්‍රපටය"}}</label>
-                  <input [(ngModel)]="advanced_query.movie" name="film" class="form-control" type="text" />
-                </div>
-                <div class="col-md-3">
-                  <label for="contain">{{english ? "Key" : "කූඤ්ඤය"}}</label>
-                  <input [(ngModel)]="advanced_query.key" name="key" class="form-control" type="text" />
-                </div>
-                <div class="col-md-3">
-                  <label for="contain">{{english ? "Beat" : "තානම"}}</label>
-                  <input [(ngModel)]="advanced_query.beat" name="beat" class="form-control" type="text" />
-                </div>
-              </div>
-              <div class="row" style="padding: 15px 15px">
-                <div class="col-md-6">
-                  <label for="contain">{{english ? "Lyrics contain the words" : "පදවල වචන අඩංගු වේ"}}</label>
-                  <input [(ngModel)]="advanced_query.lyrics" name="lyrics" class="form-control" type="text" />
-                </div>
-                <div class=" col-md-6">
-                  <label for="contain">{{english ? "Title contain the words" : "මාතෘකාව තුළ වචන අඩංගු වේ"}}</label>
-                  <input [(ngModel)]="advanced_query.title" name="title" class="form-control" type="text" />
-                </div>
-          </div>
-        </div>  
-        
-        
+      </div>
+    </div>
   </div>
-  
-  <div class="container" >
+
+  <div *ngIf="showAdvanced">
+    <div class="row" style="padding: 15px 15px">
+      <div class="col-md-4">
+        <label for="contain">{{english ? "Singer" : "ගායකයා"}}</label>
+        <input [(ngModel)]="advanced_query.artist" name="artist" class="form-control" type="text" />
+      </div>
+      <div class="col-md-4">
+        <label for="contain">{{english ? "Writer" : "රචකයා"}}</label>
+        <input [(ngModel)]="advanced_query.writer" name="writer" class="form-control" type="text" />
+      </div>
+      <div class="col-md-4">
+        <label for="contain">{{english ? "Composer" : "සංගීතය"}}</label>
+        <input [(ngModel)]="advanced_query.composer" name="composer" class="form-control" type="text" />
+      </div>
+    </div>
+    <div class="row" style="padding: 15px 15px">
+      <div class="col-md-3">
+        <label for="contain">{{english ? "Genre" : "වර්ගය"}}</label>
+        <input [(ngModel)]="advanced_query.genre" name="genre" class="form-control" type="text" />
+      </div>
+      <div class="col-md-3">
+        <label for="contain">{{english ? "From Film" : "චිත්‍රපටය"}}</label>
+        <input [(ngModel)]="advanced_query.movie" name="film" class="form-control" type="text" />
+      </div>
+      <div class="col-md-3">
+        <label for="contain">{{english ? "Key" : "කූඤ්ඤය"}}</label>
+        <input [(ngModel)]="advanced_query.key" name="key" class="form-control" type="text" />
+      </div>
+      <div class="col-md-3">
+        <label for="contain">{{english ? "Beat" : "තානම"}}</label>
+        <input [(ngModel)]="advanced_query.beat" name="beat" class="form-control" type="text" />
+      </div>
+    </div>
+    <div class="row" style="padding: 15px 15px">
+      <div class="col-md-6">
+        <label for="contain">{{english ? "Lyrics contain the words" : "පදවල වචන අඩංගු වේ"}}</label>
+        <input [(ngModel)]="advanced_query.lyrics" name="lyrics" class="form-control" type="text" />
+      </div>
+      <div class=" col-md-6">
+        <label for="contain">{{english ? "Title contain the words" : "මාතෘකාව තුළ වචන අඩංගු වේ"}}</label>
+        <input [(ngModel)]="advanced_query.title" name="title" class="form-control" type="text" />
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="container">
   <div class="row" style="padding: 50px 20px" *ngIf="showFilter">
 
 
- 
-      <div class="col-md-4">
-        {{english ? "Singer" : "ගායකයා"}} 
-        <select  class="form-control" [(ngModel)]="filter.artist">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Artist Filter']['buckets']" 
-            [value]="bucket.key" >
+
+    <div class="col-md-4">
+      {{english ? "Singer" : "ගායකයා"}}
+      <select class="form-control" [(ngModel)]="filter.artist">
+        <option class="form-control" *ngFor="let bucket of aggregations['Artist Filter']['buckets']"
+          [value]="bucket.key">
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
-      </div>
-      <div class="col-md-4">
-        {{english ? "Writer" : "රචකයා"}}
-      <select  class="form-control" [(ngModel)]="filter.writer">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Writer Filter']['buckets']" 
-            [value]="bucket.key" >
+    </div>
+    <div class="col-md-4">
+      {{english ? "Writer" : "රචකයා"}}
+      <select class="form-control" [(ngModel)]="filter.writer">
+        <option class="form-control" *ngFor="let bucket of aggregations['Writer Filter']['buckets']"
+          [value]="bucket.key">
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
-      </div>
-      <div class="col-md-4">
-        {{english ? "Composer" : "සංගීතය"}}
-      <select  class="form-control" [(ngModel)]="filter.composer">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Composer Filter']['buckets']" 
-            [value]="bucket.key" >
+    </div>
+    <div class="col-md-4">
+      {{english ? "Composer" : "සංගීතය"}}
+      <select class="form-control" [(ngModel)]="filter.composer">
+        <option class="form-control" *ngFor="let bucket of aggregations['Composer Filter']['buckets']"
+          [value]="bucket.key">
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
-      </div>
-      <div class="col-md-4">
-        {{english ? "Genre" : "වර්ගය"}}
-      <select  class="form-control" [(ngModel)]="filter.genre">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Genre Filter']['buckets']" 
-            [value]="bucket.key" >
+    </div>
+    <div class="col-md-4">
+      {{english ? "Genre" : "වර්ගය"}}
+      <select class="form-control" [(ngModel)]="filter.genre">
+        <option class="form-control" *ngFor="let bucket of aggregations['Genre Filter']['buckets']"
+          [value]="bucket.key">
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
-      </div>
-      <div class="col-md-4">
-        {{english ? "From Film" : "චිත්‍රපටය"}}
-      <select  class="form-control" [(ngModel)]="filter.movie">
-        <option  class="form-control" *ngFor="let bucket of aggregations['Movie Filter']['buckets']" 
-            [value]="bucket.key" >
+    </div>
+    <div class="col-md-4">
+      {{english ? "From Film" : "චිත්‍රපටය"}}
+      <select class="form-control" [(ngModel)]="filter.movie">
+        <option class="form-control" *ngFor="let bucket of aggregations['Movie Filter']['buckets']"
+          [value]="bucket.key">
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
-      </div>
-      <div class="col-md-4">
-        {{english ? "Views" : "දැක ඇති වාර ගණන"}}
-      <select  class="form-control" [(ngModel)]="filter.views">
-        <option  class="form-control" *ngFor="let bucket of aggregations['View Filter']['buckets']" 
-            [value]="bucket.key" >
+    </div>
+    <div class="col-md-4">
+      {{english ? "Views" : "දැක ඇති වාර ගණන"}}
+      <select class="form-control" [(ngModel)]="filter.views">
+        <option class="form-control" *ngFor="let bucket of aggregations['View Filter']['buckets']" [value]="bucket.key">
           {{bucket.key}} {{bucket.doc_count}}
         </option>
       </select>
-      </div>
+    </div>
   </div>
 
   <div class="row" *ngIf="showFilter">
     <div class="col-md-12">
-          <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
+      <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
       <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
-       </div>
+    </div>
   </div>
 
-   <div class="row" style="padding: 50px 20px">
+  <div class="row" style="padding: 50px 20px">
     <div class="col-md-12">
-      {{english ? "Search results yielded" : "සෙවුම් ප්‍රතිඵලවලින්‌ ලැබුණු සින්‌දු ගණන "}}  {{number_of_results}} {{english ? "possible songs" : ""}}
+      {{english ? "Search results yielded" : "සෙවුම් ප්‍රතිඵලවලින්‌ ලැබුණු සින්‌දු ගණන "}} {{number_of_results}}
+      {{english ? "possible songs" : ""}}
     </div>
 
 
 
-    <div style="padding: 50px 20px" class="col-md-12" *ngIf="number_of_results==0 && search_query !== '' && !error && !loading">
+    <div style="padding: 50px 20px" class="col-md-12"
+      *ngIf="number_of_results==0 && search_query !== '' && !error && !loading">
       {{english ? "No hits found try something else" : "ප්‍රතිඵල කිසිවක් සොයා ගැනීමට නොහැකි විය"}}
     </div>
 
@@ -162,31 +168,31 @@
       {{english ? "No Search Query" : "සෙවුම් විමසුමක් නොමැත"}}
     </div>
 
-    <div style="padding: 50px 20px" class="col-md-12" >
+    <div style="padding: 50px 20px" class="col-md-12">
       <ul>
-      <li *ngFor="let hit of shown_results" style="margin: 0 0 50px 0" >
-        <div >
-          <h4>
-            {{hit._source.title}} 
-          </h4>
-           <p [innerHTML]="hit._source.songLyrics">
-           </p>
-           <div>
-            {{english ? "Sung by" : "ගායනා කරේ"}}  : {{hit._source.artist}}
-            {{english ? "Written by" : "ලිව්‌වේ"}} : {{hit._source.writer}}
-            {{english ? "Composed by" : "සංගීතය සපයා ඇත්‌තේ"}} : {{hit._source.composer}}
-           </div>
-           <div>
-            {{english ? "Viewed" : ""}} {{hit._source.views}} {{english ? "times" : "වතාවක් දැක ඇත"}}
-            {{english ? "Shared" : ""}} {{hit._source.shares}} {{english ? "times" : "වතාවක් බෙදා ඇත"}}
-           </div>
-           <div>
-            {{english ? "Genres" : "වර්ග"}} : {{hit._source.genre}} 
-           </div>
-        </div>
-        
-      </li>
-    </ul>
+        <li *ngFor="let hit of shown_results" style="margin: 0 0 50px 0">
+          <div>
+            <h4>
+              {{hit._source.title}}
+            </h4>
+            <p [innerHTML]="hit._source.songLyrics">
+            </p>
+            <div>
+              {{english ? "Sung by" : "ගායනා කරේ"}} : {{hit._source.artist}}
+              {{english ? "Written by" : "ලිව්‌වේ"}} : {{hit._source.writer}}
+              {{english ? "Composed by" : "සංගීතය සපයා ඇත්‌තේ"}} : {{hit._source.composer}}
+            </div>
+            <div>
+              {{english ? "Viewed" : ""}} {{hit._source.views}} {{english ? "times" : "වතාවක් දැක ඇත"}}
+              {{english ? "Shared" : ""}} {{hit._source.shares}} {{english ? "times" : "වතාවක් බෙදා ඇත"}}
+            </div>
+            <div>
+              {{english ? "Genres" : "වර්ග"}} : {{hit._source.genre}}
+            </div>
+          </div>
+
+        </li>
+      </ul>
     </div>
 
   </div>
