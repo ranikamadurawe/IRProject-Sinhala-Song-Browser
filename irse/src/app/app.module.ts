@@ -9,14 +9,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SearchPageComponent } from './pages/search-page/search-page.component';
-import { HeaderComponent } from './components/header/header.component';
 import { RemoveSymbolPipe } from './remove-symbol.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchPageComponent,
-    HeaderComponent,
     RemoveSymbolPipe
   ],
   imports: [
