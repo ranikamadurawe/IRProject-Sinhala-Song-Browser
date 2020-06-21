@@ -2,7 +2,7 @@ import io
 from itertools import chain, combinations
 from elasticsearch import Elasticsearch
 from sinling import SinhalaTokenizer
-
+from mtranslate import translate
 
 class QueryProcessor:
 
@@ -10,6 +10,24 @@ class QueryProcessor:
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
         self.index = "160376l-ssb-data-2020-modified-index3"
+        self.translation_dict = {}
+
+    def translate_word(self, word):
+        translated = translate(word, 'si', 'en')
+        return translated
+
+    def translate_array(self, wordlist):
+        isascii = lambda s: len(s) == len(s.encode())
+        translated_array = []
+        for i in wordlist :
+            if isascii(i) :
+                if i in self.translation_dict.keys() :
+                    translated_array.append(self.translation_dict.get(i))
+                else :
+                    translated_phrase = self.translate_word(i)
+                    self.translation_dict[i] = translated_phrase
+                    translated_array.append(translated_phrase)
+        return translated_array
 
     def advancedQuery(self, queryDictionary):
 
@@ -17,6 +35,7 @@ class QueryProcessor:
         for i in queryDictionary:
             if (queryDictionary[i] != None and queryDictionary[i] != ""):
                 tokens = self.tokenizer.tokenize(queryDictionary[i])
+                tokens.extend(self.translate_array(tokens))
                 stemmed_tokens = self.stemming(tokens)
                 act = self.autocorrect(stemmed_tokens)
                 flat_list_act = []
@@ -375,6 +394,7 @@ class QueryProcessor:
     def generateQuery(self, searchQuery):
         print("[INFO] Generating Query")
         tokens = self.tokenizer.tokenize(searchQuery)
+        tokens.extend(self.translate_array(tokens))
         stemmed_tokens = self.stemming(tokens)
         act = self.autocorrect(stemmed_tokens)
         flat_list_act = []
