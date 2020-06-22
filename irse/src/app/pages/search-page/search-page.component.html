@@ -136,6 +136,22 @@
         </option>
       </select>
     </div>
+    <div class="col-md-4">
+      {{english ? "Key" : "කූඤ්ඤය"}}
+      <select class="form-control" [(ngModel)]="filter.key">
+        <option class="form-control" *ngFor="let bucket of aggregations['Key Filter']['buckets']" [value]="bucket.key">
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      {{english ? "Views" : "තානම"}}
+      <select class="form-control" [(ngModel)]="filter.beat">
+        <option class="form-control" *ngFor="let bucket of aggregations['Beat Filter']['buckets']" [value]="bucket.key">
+          {{bucket.key}} {{bucket.doc_count}}
+        </option>
+      </select>
+    </div>
   </div>
 
   <div class="row" *ngIf="showFilter">

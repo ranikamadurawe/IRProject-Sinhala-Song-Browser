@@ -21,7 +21,9 @@ export class SearchPageComponent implements OnInit {
     "Composer Filter": [],
     "Genre Filter": [],
     "Movie Filter": [],
-    "View Filter": []
+    "View Filter": [],
+    "Key Filter": [],
+    "Beat Filter": []
   };
   backend_server_location = "http://localhost:5000"
 
@@ -43,7 +45,9 @@ export class SearchPageComponent implements OnInit {
     "composer": "",
     "genre": "",
     "movie": "",
-    "views": ""
+    "views": "",
+    "key": "",
+    "beat": ""
   }
 
   constructor(private http: HttpClient) { }
@@ -58,7 +62,9 @@ export class SearchPageComponent implements OnInit {
       "composer": "",
       "genre": "",
       "movie": "",
-      "views": ""
+      "views": "",
+      "key": "",
+      "beat": ""
     }
     this.shown_results = this.results
   }
@@ -138,7 +144,9 @@ export class SearchPageComponent implements OnInit {
       "composer": "",
       "genre": "",
       "movie": "",
-      "views": ""
+      "views": "",
+      "key": "",
+      "beat": ""
     }
     this.results = []
     this.shown_results = []

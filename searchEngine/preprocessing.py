@@ -10,7 +10,7 @@ class QueryProcessor:
     def __init__(self):
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
-        self.index = "160376l-ssb-data-2020-modified-index3"
+        self.index = "160376l-ssb-data-2020-modified-index4"
         self.translation_dict = {}
 
     def translate_word(self, word):
@@ -85,6 +85,18 @@ class QueryProcessor:
                     "Writer Filter": {
                         "terms": {
                             "field": "writer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Key Filter": {
+                        "terms": {
+                            "field": "key.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Beat Filter": {
+                        "terms": {
+                            "field": "beat.keyword",
                             "size": 10
                         }
                     },
@@ -200,6 +212,18 @@ class QueryProcessor:
                                 "size": 10
                             }
                         },
+                        "Key Filter": {
+                            "terms": {
+                                "field": "key.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Beat Filter": {
+                            "terms": {
+                                "field": "beat.keyword",
+                                "size": 10
+                             }
+                        },
                         "View Filter": {
                             "range": {
                                 "field": "views",
@@ -270,6 +294,18 @@ class QueryProcessor:
                         "Writer Filter": {
                             "terms": {
                                 "field": "writer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Key Filter": {
+                            "terms": {
+                                "field": "key.keyword",
+                                "size": 10
+                             }
+                        },
+                        "Beat Filter": {
+                            "terms": {
+                                "field": "beat.keyword",
                                 "size": 10
                             }
                         },
@@ -362,6 +398,18 @@ class QueryProcessor:
                     "Writer Filter": {
                         "terms": {
                             "field": "writer.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Key Filter": {
+                        "terms": {
+                            "field": "key.keyword",
+                            "size": 10
+                        }
+                    },
+                    "Beat Filter": {
+                        "terms": {
+                            "field": "beat.keyword",
                             "size": 10
                         }
                     },
