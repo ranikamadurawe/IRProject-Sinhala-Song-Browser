@@ -3,6 +3,7 @@ from itertools import chain, combinations
 from elasticsearch import Elasticsearch
 from sinling import SinhalaTokenizer
 from mtranslate import translate
+import re
 
 class QueryProcessor:
 
@@ -146,15 +147,16 @@ class QueryProcessor:
             else:
                 sorted = True
                 if (len(fields) == 1):
-                    for i in ["artist", "writer", "genre", "composer"]:
+                    for i in ["writer", "composer", "artist", "genre", "key","beat","movie"]:
                         multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
-        for i in ["artist", "writer", "genre", "composer", "movie"]:
+        for i in ["writer", "composer", "artist", "genre", "key","beat","movie"]:
             if i not in addedFields:
                 multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
         if (not sorted):
             for i in ["title", "songLyricsSearchable"]:
                 if i not in addedFields:
                     multTermValue.append({"terms": {i: flat_list_act}})
+        print(multTermValue)
         if (not sorted):
             res = self.es.search(
                 index=self.index,
@@ -318,7 +320,7 @@ class QueryProcessor:
     def generateNormalQuery(self, flat_list_act):
         print("[INFO] Generating Normal Query")
         multTermValue = []
-        for i in ["artist", "writer", "genre", "composer", "title", "songLyricsSearchable", "movie"]:
+        for i in ["artist", "writer", "genre", "composer", "title", "songLyricsSearchable", "movie", "beat","key"]:
             multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
         print(multTermValue)
         res = self.es.search(
@@ -408,8 +410,16 @@ class QueryProcessor:
         else:
             rankedlist = []
             for i in classDict:
-                if (i in ["writer", "composer", "artist", "genre", "popularity"]):
+                if (i in ["writer", "composer", "artist", "genre", "popularity","key","beat","movie"]):
                     rankedlist.append(i)
+                    if i == "key":
+                        p = re.compile(r"[A-G,a-g][b,#]{0,1} (major|minor|Major|Major)")
+                        r = p.search(searchQuery)
+                        flat_list_act.append(r[0])
+                    if i == "beat" :
+                        p = re.compile(r"\b[0-9]{1,2}\/[0-9]{1,2}")
+                        r = p.findall(searchQuery)
+                        flat_list_act.append(r[0])
             if (len(rankedlist) > 0):
                 results = self.generateTermsMultipleQuery(flat_list_act, rankedlist, classDict)
             # self.generateFuzzyQuery()
@@ -498,6 +508,5 @@ class QueryProcessor:
             for j in suffixList:
                 if i.endswith(j):
                     stemmedWordlist.append(self.rreplace(i, j, "", 1))
-        print(stemmedWordlist)
         return stemmedWordlist
 

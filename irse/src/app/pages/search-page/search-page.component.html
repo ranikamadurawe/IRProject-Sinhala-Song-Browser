@@ -140,8 +140,8 @@
 
   <div class="row" *ngIf="showFilter">
     <div class="col-md-12">
-      <button type="button" class="btn btn-secondary" (click)="reset_filter()">Reset</button>
-      <button type="button" class="btn btn-secondary" (click)="filter_query()">Filter</button>
+      <button type="button" class="btn btn-secondary" (click)="reset_filter()">{{english ? "Reset" : "යළි තත්‌වයට ගෙන්‌"}}</button>
+      <button type="button" class="btn btn-secondary" (click)="filter_query()">{{english ? "Filter" : "පෙරහන්න"}}</button>
     </div>
   </div>
 
@@ -183,13 +183,16 @@
               <b>{{english ? "Sung by" : "ගායනා කරේ"}}</b> : {{hit._source.artist}}&nbsp;&nbsp;&nbsp;&nbsp;
               <b>{{english ? "Written by" : "ලිව්‌වේ"}}</b> : {{hit._source.writer}}&nbsp;&nbsp;&nbsp;&nbsp;
               <b>{{english ? "Composed by" : "සංගීතය සපයා ඇත්‌තේ"}}</b> : {{hit._source.composer}}&nbsp;&nbsp;&nbsp;&nbsp;
+              <b>{{english ? "From the film" : "චිත්‍රපටය"}}</b> : {{hit._source.movie}}&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <div>
               {{english ? "Viewed" : ""}} {{hit._source.views}} {{english ? "times" : "වතාවක් දැක ඇත"}}&nbsp;&nbsp;&nbsp;&nbsp;
               {{english ? "Shared" : ""}} {{hit._source.shares}} {{english ? "times" : "වතාවක් බෙදා ඇත"}}&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <div>
-              <b>{{english ? "Genres" : "වර්ග"}} :</b> {{hit._source.genre}}
+              <b>{{english ? "Genres" : "වර්ග"}} :</b> {{hit._source.genre}}&nbsp;&nbsp;&nbsp;&nbsp;
+              <b>{{english ? "Beat" : "තානම"}} :</b> {{hit._source.beat}}&nbsp;&nbsp;&nbsp;&nbsp;
+              <b>{{english ? "Key" : "කූඤ්ඤය"}} :</b> {{hit._source.key}}&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
           </div>
 
