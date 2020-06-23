@@ -161,9 +161,9 @@ export class SearchPageComponent implements OnInit {
         this.http.post(this.backend_server_location + '/search_faceted', { "facQuery": this.advanced_query }).subscribe((data: any[]) => {
           console.log(data)
           this.loading = false
-          this.number_of_results = data.length;
           this.shown_results = data['hits']['hits'];
           this.results = data['hits']['hits'];
+          this.number_of_results = this.results.length;
           this.aggregations = data['aggregations']
           console.log(this.aggregations)
           console.log(this.shown_results)
@@ -172,9 +172,9 @@ export class SearchPageComponent implements OnInit {
         this.http.post(this.backend_server_location + '/search_general', { "searchQuery": this.search_query }).subscribe((data: any[]) => {
           console.log(data)
           this.loading = false
-          this.number_of_results = data.length;
           this.shown_results = data['hits']['hits'];
           this.results = data['hits']['hits'];
+          this.number_of_results = this.results.length;
           this.aggregations = data['aggregations']
           console.log(this.shown_results)
         })
