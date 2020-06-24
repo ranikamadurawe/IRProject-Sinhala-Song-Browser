@@ -98,7 +98,7 @@ export class SearchPageComponent implements OnInit {
           if (this.filter[key] == "" || this.filter[key] == null) {
             return_val = return_val && true;
           } else {
-            if (this.filter[key] == result['_source'][key]) {
+            if (this.filter[key] == result['_source'][key] || result['_source'][key].includes(this.filter[key]) ) {
               return_val = return_val && true;
             } else {
               return_val = return_val && false;
