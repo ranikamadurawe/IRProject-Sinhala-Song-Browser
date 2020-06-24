@@ -353,11 +353,12 @@ class QueryProcessor:
         results = res['hits']['hits']
         return results
 
-    def generateNormalQuery(self, flat_list_act):
+    def generateNormalQuery(self, flat_list_act, searchQuery):
         print("[INFO] Generating Normal Query")
         multTermValue = []
         for i in ["artist", "writer", "genre", "composer", "title", "songLyricsSearchable", "movie", "beat","key"]:
             multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
+            multTermValue.append({"match_phrase": { i: searchQuery}})
         print(multTermValue)
         res = self.es.search(
             index=self.index,
@@ -453,7 +454,7 @@ class QueryProcessor:
                 flat_list_act.append(item)
         classDict = self.searchClassification(act)
         if (len(classDict) <= 0):
-            results = self.generateNormalQuery(flat_list_act)
+            results = self.generateNormalQuery(flat_list_act, searchQuery)
             # self.generateMLTQuery(searchQuery, ["artist","songLyricsSearchable","writer","composer","genre"])
         else:
             rankedlist = []
