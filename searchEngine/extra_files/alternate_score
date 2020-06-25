@@ -4,7 +4,7 @@
             {
               "field_value_factor": {
                 "field": "views",
-                "factor": 1.2,
+                "factor": 1.0001,
                 "missing": 1
               }
             }
@@ -56,6 +56,18 @@
                             "size": 10
                         }
                     },
+                        "Key Filter": {
+                            "terms": {
+                                "field": "key.keyword",
+                                "size": 10
+                             }
+                        },
+                        "Beat Filter": {
+                            "terms": {
+                                "field": "beat.keyword",
+                                "size": 10
+                            }
+                        },
                     "View Filter": {
                         "range": {
                             "field": "views",
@@ -79,4 +91,86 @@
                         }
                     }
                 }
+
+
+
+===================================================================================
+
+"query":
+                        {
+                            "bool": {
+                                "should": multTermValue
+                            }
+                        },
+                    "sort": [
+                        "_score",
+                        {"views": {"order": "desc"}}
+                    ],
+                    "size": 100,
+                    "aggs": {
+                        "Artist Filter": {
+                            "terms": {
+                                "field": "artist.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Composer Filter": {
+                            "terms": {
+                                "field": "composer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Genre Filter": {
+                            "terms": {
+                                "field": "genre.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Movie Filter": {
+                            "terms": {
+                                "field": "movie.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Writer Filter": {
+                            "terms": {
+                                "field": "writer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Key Filter": {
+                            "terms": {
+                                "field": "key.keyword",
+                                "size": 10
+                             }
+                        },
+                        "Beat Filter": {
+                            "terms": {
+                                "field": "beat.keyword",
+                                "size": 10
+                            }
+                        },
+                        "View Filter": {
+                            "range": {
+                                "field": "views",
+                                "ranges": [
+                                    {
+                                        "from": 0,
+                                        "to": 1000
+                                    },
+                                    {
+                                        "from": 1000,
+                                        "to": 2000
+                                    },
+                                    {
+                                        "from": 2000,
+                                        "to": 3000
+                                    },
+                                    {
+                                        "from": 3000
+                                    }
+                                ]
+                            }
+                        }
+                    }
 

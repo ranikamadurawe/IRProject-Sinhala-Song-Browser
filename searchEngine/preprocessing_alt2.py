@@ -148,7 +148,7 @@ class QueryProcessor:
         results = res['hits']['hits']
         return results
 
-    def generateTermsMultipleQuery(self, flat_list_act, fields, classDict, searchQuery):
+    def generateTermsMultipleQuery(self, flat_list_act, fields, classDict):
         multTermValue = []
         sorted = False
         addedFields = []
@@ -160,15 +160,18 @@ class QueryProcessor:
                 sorted = True
                 if (len(fields) == 1):
                     for i in ["writer", "composer", "artist", "genre", "key","beat","movie"]:
-                        multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
+                         for b in flat_list_act : 
+                              wildcardString = "*"+b+"*"
+                              multTermValue.append({"wildcard": { i: wildcardString }})
         for i in ["writer", "composer", "artist", "genre", "key","beat","movie"]:
             if i not in addedFields:
-                multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
+                for b in flat_list_act : 
+                    wildcardString = "*"+b+"*"
+                    multTermValue.append({"wildcard": { i: wildcardString}})
         if (not sorted):
             for i in ["title", "songLyricsSearchable"]:
-                if i not in addedFields:
-                    multTermValue.append({"terms": {i: flat_list_act}})
-                    multTermValue.append({"match_phrase": { i: searchQuery}})
+                 multTermValue.append({"terms": {i: flat_list_act}})
+                 multTermValue.append({"match_phrase": { i: searchQuery}})
         print(multTermValue)
         if (not sorted):
             res = self.es.search(
@@ -256,64 +259,48 @@ class QueryProcessor:
                 index=self.index,
                 body=
                 {
-                     "query": {
-        "function_score": {
-          "functions": [
-            {
-              "field_value_factor": {
-                "field": "views",
-                "factor": 1.0001,
-                "missing": 1
-              }
-            }
-          ],
-          "query":
+                    "query":
                         {
                             "bool": {
                                 "should": multTermValue
                             }
                         },
-                   # "sort": [
-                   #     "_score",
-                   #     {"views":  { "order": "desc" }}
-                   # ],
-                
-          "score_mode": "multiply"
-        },
-        
-    },
-   "size": 100,
-                "aggs": {
-                    "Artist Filter": {
-                        "terms": {
-                            "field": "artist.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Composer Filter": {
-                        "terms": {
-                            "field": "composer.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Genre Filter": {
-                        "terms": {
-                            "field": "genre.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Movie Filter": {
-                        "terms": {
-                            "field": "movie.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Writer Filter": {
-                        "terms": {
-                            "field": "writer.keyword",
-                            "size": 10
-                        }
-                    },
+                    "sort": [
+                        "_score",
+                        {"views": {"order": "desc"}}
+                    ],
+                    "size": 100,
+                    "aggs": {
+                        "Artist Filter": {
+                            "terms": {
+                                "field": "artist.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Composer Filter": {
+                            "terms": {
+                                "field": "composer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Genre Filter": {
+                            "terms": {
+                                "field": "genre.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Movie Filter": {
+                            "terms": {
+                                "field": "movie.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Writer Filter": {
+                            "terms": {
+                                "field": "writer.keyword",
+                                "size": 10
+                            }
+                        },
                         "Key Filter": {
                             "terms": {
                                 "field": "key.keyword",
@@ -326,30 +313,29 @@ class QueryProcessor:
                                 "size": 10
                             }
                         },
-                    "View Filter": {
-                        "range": {
-                            "field": "views",
-                            "ranges": [
-                                {
-                                    "from": 0,
-                                    "to": 1000
-                                },
-                                {
-                                    "from": 1000,
-                                    "to": 2000
-                                },
-                                {
-                                    "from": 2000,
-                                    "to": 3000
-                                },
-                                {
-                                    "from": 3000
-                                }
-                            ]
+                        "View Filter": {
+                            "range": {
+                                "field": "views",
+                                "ranges": [
+                                    {
+                                        "from": 0,
+                                        "to": 1000
+                                    },
+                                    {
+                                        "from": 1000,
+                                        "to": 2000
+                                    },
+                                    {
+                                        "from": 2000,
+                                        "to": 3000
+                                    },
+                                    {
+                                        "from": 3000
+                                    }
+                                ]
+                            }
                         }
                     }
-                }
-
                 }
             )
         results = res
@@ -375,7 +361,9 @@ class QueryProcessor:
         print("[INFO] Generating Normal Query")
         multTermValue = []
         for i in ["artist", "writer", "genre", "composer", "title", "songLyricsSearchable", "movie", "beat","key"]:
-            multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
+            for b in flat_list_act : 
+                wildcardString = "*"+b+"*"
+                multTermValue.append({"wildcard": { i: wildcardString}})
             multTermValue.append({"match_phrase": { i: searchQuery}})
         print(multTermValue)
         res = self.es.search(
@@ -465,7 +453,8 @@ class QueryProcessor:
         tokens = self.tokenizer.tokenize(searchQuery)
         tokens.extend(self.translate_array(tokens))
         stemmed_tokens = self.stemming(tokens)
-        act = self.autocorrect(stemmed_tokens)
+        #act = self.autocorrect(stemmed_tokens)
+        act = [ [i] for i in stemmed_tokens]
         flat_list_act = []
         for sublist in act:
             for item in sublist:
@@ -488,7 +477,7 @@ class QueryProcessor:
                         r = p.findall(searchQuery)
                         flat_list_act.append(r[0])
             if (len(rankedlist) > 0):
-                results = self.generateTermsMultipleQuery(flat_list_act, rankedlist, classDict, searchQuery)
+                results = self.generateTermsMultipleQuery(flat_list_act, rankedlist, classDict)
             # self.generateFuzzyQuery()
         return results
 
