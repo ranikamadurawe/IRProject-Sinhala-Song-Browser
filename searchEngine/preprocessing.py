@@ -5,12 +5,13 @@ from sinling import SinhalaTokenizer
 from mtranslate import translate
 import re
 
+
 class QueryProcessor:
 
     def __init__(self):
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
-        self.index = "160376l-ssb-data-2020-modified-index4"
+        self.index = "160376l-ssb-data-2020-modified-index6"
         self.translation_dict = {}
 
     def translate_word(self, word):
@@ -20,11 +21,11 @@ class QueryProcessor:
     def translate_array(self, wordlist):
         isascii = lambda s: len(s) == len(s.encode())
         translated_array = []
-        for i in wordlist :
-            if isascii(i) :
-                if i in self.translation_dict.keys() :
+        for i in wordlist:
+            if isascii(i):
+                if i in self.translation_dict.keys():
                     translated_array.append(self.translation_dict.get(i))
-                else :
+                else:
                     translated_phrase = self.translate_word(i)
                     self.translation_dict[i] = translated_phrase
                     translated_array.append(translated_phrase)
@@ -159,16 +160,16 @@ class QueryProcessor:
             else:
                 sorted = True
                 if (len(fields) == 1):
-                    for i in ["writer", "composer", "artist", "genre", "key","beat","movie"]:
+                    for i in ["writer", "composer", "artist", "genre", "key", "beat", "movie"]:
                         multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
-        for i in ["writer", "composer", "artist", "genre", "key","beat","movie"]:
+        for i in ["writer", "composer", "artist", "genre", "key", "beat", "movie"]:
             if i not in addedFields:
                 multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
         if (not sorted):
             for i in ["title", "songLyricsSearchable"]:
                 if i not in addedFields:
                     multTermValue.append({"terms": {i: flat_list_act}})
-                    multTermValue.append({"match_phrase": { i: searchQuery}})
+                    multTermValue.append({"match_phrase": {i: searchQuery}})
         print(multTermValue)
         if (not sorted):
             res = self.es.search(
@@ -223,7 +224,7 @@ class QueryProcessor:
                             "terms": {
                                 "field": "beat.keyword",
                                 "size": 10
-                             }
+                            }
                         },
                         "View Filter": {
                             "range": {
@@ -256,69 +257,69 @@ class QueryProcessor:
                 index=self.index,
                 body=
                 {
-                     "query": {
-        "function_score": {
-          "functions": [
-            {
-              "field_value_factor": {
-                "field": "views",
-                "factor": 1.0001,
-                "missing": 1
-              }
-            }
-          ],
-          "query":
-                        {
-                            "bool": {
-                                "should": multTermValue
+                    "query": {
+                        "function_score": {
+                            "functions": [
+                                {
+                                    "field_value_factor": {
+                                        "field": "views",
+                                        "factor": 1.0001,
+                                        "missing": 1
+                                    }
+                                }
+                            ],
+                            "query":
+                                {
+                                    "bool": {
+                                        "should": multTermValue
+                                    }
+                                },
+                            # "sort": [
+                            #     "_score",
+                            #     {"views":  { "order": "desc" }}
+                            # ],
+
+                            "score_mode": "multiply"
+                        },
+
+                    },
+                    "size": 100,
+                    "aggs": {
+                        "Artist Filter": {
+                            "terms": {
+                                "field": "artist.keyword",
+                                "size": 10
                             }
                         },
-                   # "sort": [
-                   #     "_score",
-                   #     {"views":  { "order": "desc" }}
-                   # ],
-                
-          "score_mode": "multiply"
-        },
-        
-    },
-   "size": 100,
-                "aggs": {
-                    "Artist Filter": {
-                        "terms": {
-                            "field": "artist.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Composer Filter": {
-                        "terms": {
-                            "field": "composer.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Genre Filter": {
-                        "terms": {
-                            "field": "genre.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Movie Filter": {
-                        "terms": {
-                            "field": "movie.keyword",
-                            "size": 10
-                        }
-                    },
-                    "Writer Filter": {
-                        "terms": {
-                            "field": "writer.keyword",
-                            "size": 10
-                        }
-                    },
+                        "Composer Filter": {
+                            "terms": {
+                                "field": "composer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Genre Filter": {
+                            "terms": {
+                                "field": "genre.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Movie Filter": {
+                            "terms": {
+                                "field": "movie.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Writer Filter": {
+                            "terms": {
+                                "field": "writer.keyword",
+                                "size": 10
+                            }
+                        },
                         "Key Filter": {
                             "terms": {
                                 "field": "key.keyword",
                                 "size": 10
-                             }
+                            }
                         },
                         "Beat Filter": {
                             "terms": {
@@ -326,29 +327,29 @@ class QueryProcessor:
                                 "size": 10
                             }
                         },
-                    "View Filter": {
-                        "range": {
-                            "field": "views",
-                            "ranges": [
-                                {
-                                    "from": 0,
-                                    "to": 1000
-                                },
-                                {
-                                    "from": 1000,
-                                    "to": 2000
-                                },
-                                {
-                                    "from": 2000,
-                                    "to": 3000
-                                },
-                                {
-                                    "from": 3000
-                                }
-                            ]
+                        "View Filter": {
+                            "range": {
+                                "field": "views",
+                                "ranges": [
+                                    {
+                                        "from": 0,
+                                        "to": 1000
+                                    },
+                                    {
+                                        "from": 1000,
+                                        "to": 2000
+                                    },
+                                    {
+                                        "from": 2000,
+                                        "to": 3000
+                                    },
+                                    {
+                                        "from": 3000
+                                    }
+                                ]
+                            }
                         }
                     }
-                }
 
                 }
             )
@@ -374,9 +375,9 @@ class QueryProcessor:
     def generateNormalQuery(self, flat_list_act, searchQuery):
         print("[INFO] Generating Normal Query")
         multTermValue = []
-        for i in ["artist", "writer", "genre", "composer", "title", "songLyricsSearchable", "movie", "beat","key"]:
+        for i in ["artist", "writer", "genre", "composer", "title", "songLyricsSearchable", "movie", "beat", "key"]:
             multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
-            multTermValue.append({"match_phrase": { i: searchQuery}})
+            multTermValue.append({"match_phrase": {i: searchQuery}})
         print(multTermValue)
         res = self.es.search(
             index=self.index,
@@ -477,13 +478,13 @@ class QueryProcessor:
         else:
             rankedlist = []
             for i in classDict:
-                if (i in ["writer", "composer", "artist", "genre", "popularity","key","beat","movie"]):
+                if (i in ["writer", "composer", "artist", "genre", "popularity", "key", "beat", "movie"]):
                     rankedlist.append(i)
                     if i == "key":
                         p = re.compile(r"[A-G,a-g][b,#]{0,1} (major|minor|Major|Major)")
                         r = p.search(searchQuery)
                         flat_list_act.append(r[0])
-                    if i == "beat" :
+                    if i == "beat":
                         p = re.compile(r"\b[0-9]{1,2}\/[0-9]{1,2}")
                         r = p.findall(searchQuery)
                         flat_list_act.append(r[0])
@@ -576,4 +577,3 @@ class QueryProcessor:
                 if i.endswith(j):
                     stemmedWordlist.append(self.rreplace(i, j, "", 1))
         return stemmedWordlist
-
