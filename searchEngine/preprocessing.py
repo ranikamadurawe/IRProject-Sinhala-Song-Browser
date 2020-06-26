@@ -14,15 +14,18 @@ class QueryProcessor:
         self.index = "160376l-ssb-data-2020-modified-index6"
         self.translation_dict = {}
 
+    # Translate a word from English to Sinhala
     def translate_word(self, word):
         translated = translate(word, 'si', 'en')
         return translated
 
+    # Translate an array from English to Sinhala
     def translate_array(self, wordlist):
-        isascii = lambda s: len(s) == len(s.encode())
+        isAscii = lambda s: len(s) == len(s.encode())
         translated_array = []
         for i in wordlist:
-            if isascii(i):
+            # Check if word is made of ASCII Letters
+            if isAscii(i):
                 if i in self.translation_dict.keys():
                     translated_array.append(self.translation_dict.get(i))
                 else:
@@ -31,8 +34,8 @@ class QueryProcessor:
                     translated_array.append(translated_phrase)
         return translated_array
 
+    # Genereate ES Query for Advacned Queries
     def advancedQuery(self, queryDictionary):
-
         multTermValue = []
         for i in queryDictionary:
             if (queryDictionary[i] != None and queryDictionary[i] != ""):
@@ -46,7 +49,7 @@ class QueryProcessor:
                         flat_list_act.append(item)
                 flat_list_act.append(queryDictionary[i])
                 multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
-        print(multTermValue)
+        # Generate a ES Boolean Query
         res = self.es.search(
             index=self.index,
             body=
@@ -129,26 +132,7 @@ class QueryProcessor:
         results = res
         return results
 
-    def generateMLTQuery(self, searchQuery, rankedlist):
-        print("[INFO] Generating ranked Query")
-        res = self.es.search(
-            index=self.index,
-            body=
-            {
-                "query":
-                    {
-                        "more_like_this": {
-                            "fields": rankedlist,
-                            "like": searchQuery,
-                            "min_term_freq": 1,
-                            "max_query_terms": 12
-                        }
-                    }
-            }
-        )
-        results = res['hits']['hits']
-        return results
-
+    # Generate ES Query with Boosted MetaData tags
     def generateTermsMultipleQuery(self, flat_list_act, fields, classDict, searchQuery):
         multTermValue = []
         sorted = False
@@ -170,7 +154,7 @@ class QueryProcessor:
                 if i not in addedFields:
                     multTermValue.append({"terms": {i: flat_list_act}})
                     multTermValue.append({"match_phrase": {i: searchQuery}})
-        print(multTermValue)
+        # If no ranking terms (i.e හොඳම) have been provided do not sort results
         if (not sorted):
             res = self.es.search(
                 index=self.index,
@@ -251,6 +235,7 @@ class QueryProcessor:
                     }
                 }
             )
+        # If ranking terms (i.e හොඳම) have been provided sort results based on the function score
         else:
             print("run query")
             res = self.es.search(
@@ -356,22 +341,7 @@ class QueryProcessor:
         results = res
         return results
 
-    def generateTermsSingleQuery(self, flat_list_act, field):
-        res = self.es.search(
-            index=self.index,
-            body=
-            {
-                "query":
-                    {
-                        "terms": {
-                            field: flat_list_act
-                        }
-                    }
-            }
-        )
-        results = res['hits']['hits']
-        return results
-
+    # Generate a Normal Query with no Boosted MetaData tags
     def generateNormalQuery(self, flat_list_act, searchQuery):
         print("[INFO] Generating Normal Query")
         multTermValue = []
@@ -461,6 +431,7 @@ class QueryProcessor:
         results = res
         return results
 
+    # Analyze the word and generate appropriate keyword for user's search request
     def generateQuery(self, searchQuery):
         print("[INFO] Generating Query")
         tokens = self.tokenizer.tokenize(searchQuery)
@@ -496,7 +467,8 @@ class QueryProcessor:
     def getSubsets(self, iterable):
         return chain.from_iterable(combinations(iterable, r) for r in range(len(iterable) + 1))
 
-    # Observe tokens and return query type as 'Normal Lyric Search', 'Feature Search', 'Ranked Feature Search'
+    # Observe tokens and return query type
+    # If special keyword boosting terms exist return the presence of those keywords
     def searchClassification(self, tokens):
 
         synonyms = "synonyms.txt"
