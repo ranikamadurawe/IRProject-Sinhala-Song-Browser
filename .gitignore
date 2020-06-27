@@ -1,7 +1,15 @@
+#IDEA and pycache temp files
 /lyricsScraper/.idea
-/resourceFiles
 searchEngine/.idea/
 searchEngine/__pycache__/
 pythonHelpers/.idea/
 /lyricsScraper/lyricsScraper/.idea
 /lyricsScraper/lyricsScraper/__pycache__
+
+
+#Resource files
+/resourceFiles
+
+#Python Helper scripts
+/pythonHelpers
+
