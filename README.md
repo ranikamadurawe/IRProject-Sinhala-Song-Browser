@@ -5,6 +5,14 @@ This repo contains all code required for the implementation of a Sinhala Song Ly
 * Python 3.6.9
 * ElasticSearch 7.7.0
 
+Additionally preimplemented tokenizers and stemmers from the following projects have been integrated
+* Singling Tokenizer https://github.com/ysenarath/sinling
+* Sinhala Stemmer https://github.com/shilpasayura/sinhala-nltk/tree/master/sinhala-stemmer
+
+The following Utility tools have also been used
+* Scrapy ElasticSearch pipeline https://github.com/jayzeng/scrapy-elasticsearch
+* Elasticdump Tool https://www.npmjs.com/package/elasticdump
+
 ## Project Structure
 ### 1. angularSE
 Contains the code for the Angular 8 based Search Engine Implementation. Issue the following command in this directory to run the Search Engine on port 4200
