@@ -3,6 +3,7 @@ This repo contains all code required for the implementation of a Sinhala Song Ly
 ## Project Requirements
 * Angular 8.3.23
 * Python 3.6.9
+* ElasticSearch 7.7.0
 
 ## Project Structure
 ### 1. angularSE

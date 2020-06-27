@@ -1,0 +1,4 @@
+mtranslate==1.6
+Flask==1.0.2
+elasticsearch==7.7.0
+Flask_Cors==3.0.8

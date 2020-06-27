@@ -471,7 +471,7 @@ class QueryProcessor:
     # If special keyword boosting terms exist return the presence of those keywords
     def searchClassification(self, tokens):
 
-        synonyms = "synonyms.txt"
+        synonyms = "resource_files/synonyms.txt"
         try:
             synonymsFile = io.open(synonyms, "r", encoding='utf-8').read()
         except UnicodeDecodeError:
@@ -502,7 +502,7 @@ class QueryProcessor:
     # Looks at basic error rules within the Sinhala Lanugage and appends likely errors
     def autocorrect(self, tokens):
         allWords = [[] for i in range(len(tokens))]
-        missFileDirec = "mispellings.txt"
+        missFileDirec = "resource_files/mispellings.txt"
         try:
             misspellingsFile = io.open(missFileDirec, "r", encoding='utf-8').read()
         except UnicodeDecodeError:
@@ -532,7 +532,7 @@ class QueryProcessor:
 
     # Reduce strings to simple formats based on rules
     def stemming(self, doc):
-        suffFileDirec = "suffixes.txt"
+        suffFileDirec = "resource_files/suffixes.txt"
         try:
             suffixFile = io.open(suffFileDirec, "r", encoding='utf-8').read()
         except UnicodeDecodeError:
