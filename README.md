@@ -6,15 +6,15 @@ This repo contains all code required for the implementation of a Sinhala Song Ly
 
 ## Project Structure
 ### 1. angularSE
-Contains the code for the Angular 8 based Search Engine Implementation. Issue the following command in this directory to run the Search Engine in port 4200
-    ```
-    ng serve
-    ```
+Contains the code for the Angular 8 based Search Engine Implementation. Issue the following command in this directory to run the Search Engine on port 4200
+```
+ng serve
+```
 ### 2. esIndexBackup
 Contains the backup files for the used elastic search analyzer, mapping and data use. Utilize the following commands to import the json file to an elasticSearch Index
-    ```
-    elasticdump   --input=final_elasticsearch_<type>.json --output=http://<your-es-instance>/<your-index>   --type=<type>
-    ```
+```
+elasticdump   --input=final_elasticsearch_<type>.json --output=http://<your-es-instance>/<your-index>   --type=<type>
+```
 ### 3. lyricsScraper
 Contains the Scrapy web crawler which was used to scrape web pages for music data.
     ```
@@ -30,7 +30,7 @@ ELASTICSEARCH_UNIQ_KEY = '<your-item-type>'
  ```
 
 ### 4. searchEngine
-Contains the Flask server which is used to implement the backend server of the Search Engine. Use the following code to run the flask server in port 5000
-    ```
-    python server.py
-    ```
+Contains the Flask server which is used to implement the backend server of the Search Engine. Use the following code to run the flask server on port 5000
+```
+python server.py
+```
