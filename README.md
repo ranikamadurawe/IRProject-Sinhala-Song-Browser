@@ -47,7 +47,7 @@ Contains the Scrapy web crawler which was used to scrape web pages for music dat
 ```
 pip install -r requirement.txt
 ```
-Begin scraping by issuing the following command
+Begin scraping by issuing the following command (-o tag is optional if you wish to add scraped data directory to a file)
 ```
 scrapy crawl sinhalasongbook -o <optional_data_file>
 ```

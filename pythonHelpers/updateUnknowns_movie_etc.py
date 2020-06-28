@@ -1,4 +1,4 @@
-# This script is used to change any songs with no movies and or unknown keys and bests from the incosistent format to a consistent format
+# This script is used to change any songs with no movies and or unknown keys and bests from the incosistent format to a consistent format of an index
 # The chosen format was to apply "නොදන්‌නා" for keys and beats and චිත්‍රපටයකින් නොවේ for films
 
 from elasticsearch import Elasticsearch

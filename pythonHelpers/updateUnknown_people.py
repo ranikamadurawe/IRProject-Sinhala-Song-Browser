@@ -1,4 +1,4 @@
-# This script is used to change any songs with unknown artists, writers or composers from the incosistent format of either "නොදත්‌", "නොදන්‌නා" and null to consistent format
+# This script is used to change any songs with unknown artists, writers or composers from the incosistent format of either "නොදත්‌", "නොදන්‌නා" and null to consistent format of a index
 # The chosen format was to apply ["නොදන්‌නා"]
 
 from elasticsearch import Elasticsearch
