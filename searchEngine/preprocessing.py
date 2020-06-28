@@ -11,7 +11,7 @@ class QueryProcessor:
     def __init__(self):
         self.tokenizer = SinhalaTokenizer()
         self.es = Elasticsearch()
-        self.index = "160376l-ssb-data-2020-modified-index6"
+        self.index = "160376l-ssb-data-2020-modified-index7"
         self.translation_dict = {}
 
     # Translate a word from English to Sinhala
@@ -39,6 +39,7 @@ class QueryProcessor:
         multTermValue = []
         for i in queryDictionary:
             if (queryDictionary[i] != None and queryDictionary[i] != ""):
+                queryDictionary[i] = queryDictionary[i].replace("."," ")
                 tokens = self.tokenizer.tokenize(queryDictionary[i])
                 tokens.extend(self.translate_array(tokens))
                 stemmed_tokens = self.stemming(tokens)
@@ -434,6 +435,7 @@ class QueryProcessor:
     # Analyze the word and generate appropriate keyword for user's search request
     def generateQuery(self, searchQuery):
         print("[INFO] Generating Query")
+        searchQuery = searchQuery.replace("."," ")
         tokens = self.tokenizer.tokenize(searchQuery)
         tokens.extend(self.translate_array(tokens))
         stemmed_tokens = self.stemming(tokens)
