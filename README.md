@@ -9,6 +9,8 @@ This repo contains all code required for the implementation of a Sinhala Song Ly
 4. Bilingual Support
 5. Rule based Query classification
 
+Additionally the Song Lyrics and metadata were scraped from [Sinhala Song Book](https://sinhalasongbook.com/).
+
 ## Project Requirements
 * Angular 8.3.23
 * Python 3.6.9
@@ -19,7 +21,7 @@ Additionally preimplemented tokenizers and stemmers from the following projects 
 2. Stemmer - [Sinhala Stemmer](https://github.com/shilpasayura/sinhala-nltk/tree/master/sinhala-stemmer)
 
 The following Utility tools have also been used
-1. Pipeline - [Scrapy ElasticSearch pipelin](https://github.com/jayzeng/scrapy-elasticsearch)
+1. Pipeline - [Scrapy ElasticSearch pipeline](https://github.com/jayzeng/scrapy-elasticsearch)
 2. Import & Export tool for Elasticsearch - [Elasticdump](https://www.npmjs.com/package/elasticdump)
 
 ## Search Engine Architecture
@@ -47,11 +49,27 @@ Contains the Scrapy web crawler which was used to scrape web pages for music dat
 ```
 pip install -r requirement.txt
 ```
+Before begining the scraping process open the [ssb_spider.py](lyricsScraper/lyricsScraper/spiders/ssb_spider.py) file and edit line 33 `start_range` and `end_range` to meet your requirement. (Should taken values between 1 and 22)
+
+```
+"https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=" + str(i) for i in range(start_range,end_range)
+```
+Doing so will have the spider navigate and find songs from 
+```
+https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=start_range` 
+```
+to 
+```
+https://sinhalasongbook.com/all-sinhala-song-lyrics-and-chords/?_page=end_range`
+```
+
+To reduce the load onto the scraping site keep the range to a small value (less than 5)
+
 Begin scraping by issuing the following command (-o tag is optional if you wish to add scraped data directory to a file)
 ```
 scrapy crawl sinhalasongbook -o <optional_data_file>
 ```
-The scraper automatcally sends data the specified elasticsearch index specified in the settings.py file
+The scraper automatcally sends data the specified elasticsearch index specified in the [settings.py](yricsScraper/lyricsScraper/settings.py) file
 ```
 ELASTICSEARCH_SERVERS = ['localhost']
 ELASTICSEARCH_INDEX = '<your-index>'
