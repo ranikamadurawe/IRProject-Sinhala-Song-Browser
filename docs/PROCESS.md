@@ -1,8 +1,7 @@
 # IRProject-Sinhala-Song-Browser
 
-## HIgh Level Flow diagram of SQG
-<br>
-![process](../resources/process.png)
+## High Level Flow diagram of SQG
+![process](https://github.com/ranikamadurawe/IRProject-Sinhala-Song-Browser/blob/master/resources/process.png?raw=true)
 
 ## Design Decisions
 
