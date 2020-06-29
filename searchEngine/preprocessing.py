@@ -519,13 +519,15 @@ class QueryProcessor:
             for misspellPairs in missListSet:
                 if misspellPairs[0] in token or misspellPairs[1] in token:
                     missListForWord.append(misspellPairs)
+            print(list(self.getSubsets(missListForWord)))
             for j in list(self.getSubsets(missListForWord)):
+                k = token
                 for d in list(j):
-                    if d[0] in token:
-                        token = token.replace(d[0], d[1])
+                    if d[0] in k:
+                        k = k.replace(d[0], d[1])
                     elif d[1] in token:
-                        token = token.replace(d[1], d[0])
-                allWords[token_number].append(token)
+                        k = k.replace(d[1], d[0])
+                allWords[token_number].append(k)
         return allWords
 
     def rreplace(self, s, old, new, occurrence):
