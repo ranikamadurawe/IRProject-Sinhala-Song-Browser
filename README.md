@@ -93,7 +93,7 @@ python server.py
 * The `/original` sub-directory contains all scraped data in it's original format. The 11 json files contains upto 100 songs (2 pages worth of songs). This is limitation of 2 pages was chosen so as not to overburden the site from which songs were scraped during a scraping session. The json files are encoded in utf-16
 * The `/edited` sub-directory contains the final formated corpus of all 1096 scraped in a single file format. 
 
-View the structure of the data by clicking [here](scrapedData/README.md)
+View the structure of the data by clicking [here](scrapedData/DATA.md)
 
 ### 6. pythonHelpers
 
