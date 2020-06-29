@@ -1,7 +1,7 @@
 # IRProject-Sinhala-Song-Browser
 
 ## Introduction
-This repo contains all code required for the implementation of a Sinhala Song Lyrics Engine for module CS4642. The search engine contains a collection of 1096 Sinhala Songs. The main functionalities of the search engine include
+This repo contains all code required for the implementation of a Sinhala Song Lyrics Engine for module CS4642. The search engine contains a collection of 1096 Sinhala Songs. The data has been scraped from [Sinhala Songbook](https://sinhalasongbook.com/). This project has been conducted for Educational purposes. The main functionalities of the search engine include
 
 1. General Search Queries
 2. Advanced field specific Search Queries
