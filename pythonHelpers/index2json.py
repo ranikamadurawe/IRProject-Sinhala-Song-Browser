@@ -7,7 +7,7 @@ import pandas
 elastic_client = Elasticsearch()
 
 # make an API call to the Elasticsearch cluster to get documents
-result = elastic_client.search(index='160376l-ssb-data-2020', body={}, size=1096)
+result = elastic_client.search(index='160376l-ssb-data-2020-modified-index7', body={}, size=1096)
 
 elastic_docs = result['hits']['hits']
 
