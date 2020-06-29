@@ -137,6 +137,7 @@ class QueryProcessor:
     def generateTermsMultipleQuery(self, flat_list_act, fields, classDict, searchQuery):
         multTermValue = []
         sorted = False
+        sortedsimpleQuery = False
         addedFields = []
         for i in fields:
             if (i != "popularity"):
@@ -145,8 +146,7 @@ class QueryProcessor:
             else:
                 sorted = True
                 if (len(fields) == 1):
-                    for i in ["writer", "composer", "artist", "genre", "key", "beat", "movie"]:
-                        multTermValue.append({"terms": {i: flat_list_act, "boost": 2}})
+                    sortedsimpleQuery = True
         for i in ["writer", "composer", "artist", "genre", "key", "beat", "movie"]:
             if i not in addedFields:
                 multTermValue.append({"terms": {i: flat_list_act, "boost": 1}})
@@ -237,8 +237,7 @@ class QueryProcessor:
                 }
             )
         # If ranking terms (i.e හොඳම) have been provided sort results based on the function score
-        else:
-            print("run query")
+        elif (sorted and not sortedsimpleQuery):
             res = self.es.search(
                 index=self.index,
                 body=
@@ -269,6 +268,88 @@ class QueryProcessor:
                         },
 
                     },
+                    "size": 100,
+                    "aggs": {
+                        "Artist Filter": {
+                            "terms": {
+                                "field": "artist.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Composer Filter": {
+                            "terms": {
+                                "field": "composer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Genre Filter": {
+                            "terms": {
+                                "field": "genre.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Movie Filter": {
+                            "terms": {
+                                "field": "movie.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Writer Filter": {
+                            "terms": {
+                                "field": "writer.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Key Filter": {
+                            "terms": {
+                                "field": "key.keyword",
+                                "size": 10
+                            }
+                        },
+                        "Beat Filter": {
+                            "terms": {
+                                "field": "beat.keyword",
+                                "size": 10
+                            }
+                        },
+                        "View Filter": {
+                            "range": {
+                                "field": "views",
+                                "ranges": [
+                                    {
+                                        "from": 0,
+                                        "to": 1000
+                                    },
+                                    {
+                                        "from": 1000,
+                                        "to": 2000
+                                    },
+                                    {
+                                        "from": 2000,
+                                        "to": 3000
+                                    },
+                                    {
+                                        "from": 3000
+                                    }
+                                ]
+                            }
+                        }
+                    }
+
+                }
+            )
+        elif (sorted and sortedsimpleQuery):
+            res = self.es.search(
+                index=self.index,
+                body=
+                {
+                    "query": {
+                        "match_all" : {}
+                         
+                    },
+                    "sort": [
+                        {"views":  { "order": "desc" }}
+                    ],
                     "size": 100,
                     "aggs": {
                         "Artist Filter": {
